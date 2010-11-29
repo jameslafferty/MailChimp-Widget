@@ -1,6 +1,7 @@
 === MailChimp Widget ===
 Contributors: jameslafferty
-Tags: newsletter, MailChimp, mailing list
+Tags: newsletter, MailChimp, mailing list, widget, email marketing
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JSL4JTA4KMZLG
 Requires at least: 3.0.1
 Tested up to: 3.0.1
 Stable tag: trunk
@@ -14,9 +15,10 @@ several different lists by creating multiple instances of the widget. Once a use
 prevent the sign up form for that particular list from displaying. Sign ups for other lists will display.
 
 The MailChimp Widget:
-1. is easy to use
-1. is AJAX-enabled, but degrades gracefully if Javascript isn't turned on
-1. encourages the collection of only information that you actually need (i.e., an email address) to send your mailers
+
+*	is easy to use
+*	is AJAX-enabled, but degrades gracefully if Javascript isn't turned on
+*	encourages the collection of only information that you actually need (i.e., an email address) to send your mailers
 
 == Installation ==
 1. Upload the mailchimp_widget to /wp-content/plugins/.
@@ -37,3 +39,8 @@ There are no Frequently Asked Questions yet... This is the first release!
 
 = 0.1 =
 * First release.
+
+== Upgrade Notice ==
+
+= 0.1 =
+First release.

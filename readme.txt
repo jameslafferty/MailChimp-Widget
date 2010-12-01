@@ -37,10 +37,25 @@ There are no Frequently Asked Questions yet... This is the first release!
 
 == Changelog ==
 
+= 0.1.2 =
+* Fixed issue with widget button label.
+
+= 0.1.1 =
+* Updated link in admin notices.
+
+= 0.1a =
+* Changed filenames which were causing an issue with autoloading on some systems.
+
 = 0.1 =
 * First release.
 
 == Upgrade Notice ==
+
+= 0.1.1 =
+* Fixed link in admin notices to be actually functional.
+
+= 0.1a =
+* This may help if you're getting an error on activation.
 
 = 0.1 =
 First release.

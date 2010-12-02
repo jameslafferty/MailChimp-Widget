@@ -19,9 +19,9 @@ class NS_Widget_MailChimp extends WP_Widget {
 	
 	public function NS_Widget_MailChimp () {
 		
-		$widget_options = array('classname' => 'widget_ns_mailchimp', 'description' => __( "Displays a sign-up form for a MailChimp mailing list."));
+		$widget_options = array('classname' => 'widget_ns_mailchimp', 'description' => __( "Displays a sign-up form for a MailChimp mailing list.", 'mailchimp-widget'));
 		
-		$this->WP_Widget('ns_widget_mailchimp', __('MailChimp List Signup'), $widget_options);
+		$this->WP_Widget('ns_widget_mailchimp', __('MailChimp List Signup', 'mailchimp-widget'), $widget_options);
 		
 		$this->ns_mc_plugin = NS_MC_Plugin::get_instance();
 		
@@ -59,8 +59,8 @@ class NS_Widget_MailChimp extends WP_Widget {
 			
 			$defaults = array(
 
-				'title' => __($this->default_title),
-				'signup_text' => __($this->default_signup_text)
+				'title' => __($this->default_title, 'mailchimp-widget'),
+				'signup_text' => __($this->default_signup_text, 'mailchimp-widget')
 
 			);
 
@@ -68,9 +68,9 @@ class NS_Widget_MailChimp extends WP_Widget {
 
 			extract($vars);
 
-			$form = '<p><label>' . __('Title :') . '<input class="widefat" id=""' . $this->get_field_id('title') . '" name="' . $this->get_field_name('title') . '" type="text" value="' . $title . '" /></label></p>';
+			$form = '<p><label>' . __('Title :', 'mailchimp-widget') . '<input class="widefat" id=""' . $this->get_field_id('title') . '" name="' . $this->get_field_name('title') . '" type="text" value="' . $title . '" /></label></p>';
 			
-			$form .= '<p><label>' . __('Select a Mailing List:') . '';
+			$form .= '<p><label>' . __('Select a Mailing List:', 'mailchimp-widget') . '';
 			
 			$form .= '<select class="widefat" id="' . $this->get_field_id('current_mailing_list') . '" name="' . $this->get_field_name('current_mailing_list') . '">';
 			
@@ -78,13 +78,13 @@ class NS_Widget_MailChimp extends WP_Widget {
 				
 				$selected = ($current_mailing_list == $value['id']) ? ' selected="selected" ' : '';
 				
-				$form .= '<option ' . $selected . 'value="' . $value['id'] . '">' . __($value['name']) . '</option>';
+				$form .= '<option ' . $selected . 'value="' . $value['id'] . '">' . __($value['name'], 'mailchimp-widget') . '</option>';
 				
 			}
 			
-			$form .= '</select></label></p><p><strong>N.B.</strong> ' . __('This is the list your users will be signing up for in your sidebar.') . '</p>';
+			$form .= '</select></label></p><p><strong>N.B.</strong> ' . __('This is the list your users will be signing up for in your sidebar.', 'mailchimp-widget') . '</p>';
 			
-			$form .= '<p><label>' . __('Sign Up Button Text :') . '<input class="widefat" id="' . $this->get_field_id('signup_text') .'" name="' . $this->get_field_name('signup_text') . '" value="' . $signup_text . '" /></label></p>';
+			$form .= '<p><label>' . __('Sign Up Button Text :', 'mailchimp-widget') . '<input class="widefat" id="' . $this->get_field_id('signup_text') .'" name="' . $this->get_field_name('signup_text') . '" value="' . $signup_text . '" /></label></p>';
 			
 		} else { //If an API key hasn't been entered, direct the user to set one up.
 			
@@ -109,7 +109,7 @@ class NS_Widget_MailChimp extends WP_Widget {
 			
 			//Assume the worst.
 			$response = '';
-			$result = array('success' => false, 'error' => __('There was a problem processing your submission.'));
+			$result = array('success' => false, 'error' => __('There was a problem processing your submission.', 'mailchimp-widget'));
 			
 			if (! is_email($_GET[$this->id_base . '_email'])) { //Use WordPress's built-in is_email function to validate input.
 				
@@ -134,7 +134,7 @@ class NS_Widget_MailChimp extends WP_Widget {
 					
 						$result['success'] = true;
 						$result['error'] = '';
-						$result['success_message'] = __('Thank you for joining our mailing list. Please check your email for a confirmation link.');
+						$result['success_message'] = __('Thank you for joining our mailing list. Please check your email for a confirmation link.', 'mailchimp-widget');
 						$response = json_encode($result);
 						
 					}
@@ -147,7 +147,7 @@ class NS_Widget_MailChimp extends WP_Widget {
 			
 		} elseif (isset($_POST[$this->id_base . '_email'])) {
 			
-			$this->subscribe_errors = '<div class="error">' . __('There was a problem processing your submission.') . '</div>';
+			$this->subscribe_errors = '<div class="error">' . __('There was a problem processing your submission.', 'mailchimp-widget') . '</div>';
 			
 			if (! is_email($_POST[$this->id_base . '_email'])) {
 				
@@ -177,7 +177,7 @@ class NS_Widget_MailChimp extends WP_Widget {
 				
 				$this->successful_signup = true;
 				
-				$this->signup_success_message = '<p>' . __('Thank you for joining our mailing list. Please check your email for a confirmation link') . '</p>';
+				$this->signup_success_message = '<p>' . __('Thank you for joining our mailing list. Please check your email for a confirmation link', 'mailchimp-widget') . '</p>';
 				
 				return true;
 				
@@ -229,7 +229,7 @@ class NS_Widget_MailChimp extends WP_Widget {
 				
 			} else {
 			
-				$widget .= '<form action="' . $_SERVER['REQUEST_URI'] . '" id="' . $this->id_base . '_form-' . $this->number . '" method="post">' . $this->subscribe_errors . '<label>' . __('Email Address :') . '</label><input type="hidden" name="ns_mc_number" value="' . $this->number . '" /><input type="text" name="' . $this->id_base . '_email" /><input type="submit" name="' . __($instance['signup_text']) . '" value="' . __($instance['signup_text']) . '" /></form><script type="text/javascript"> jQuery(\'#' . $this->id_base . '_form-' . $this->number . '\').ns_mc_widget({"url" : "' . $_SERVER['PHP_SELF'] . '", "cookie_id" : "'. $this->id_base . '-' . $this->number . '", "cookie_value" : "' . $this->hash_mailing_list_id() . '", "loader_graphic" : "' . $this->default_loader_graphic . '"}); </script>';
+				$widget .= '<form action="' . $_SERVER['REQUEST_URI'] . '" id="' . $this->id_base . '_form-' . $this->number . '" method="post">' . $this->subscribe_errors . '<label>' . __('Email Address :', 'mailchimp-widget') . '</label><input type="hidden" name="ns_mc_number" value="' . $this->number . '" /><input type="text" name="' . $this->id_base . '_email" /><input type="submit" name="' . __($instance['signup_text'], 'mailchimp-widget') . '" value="' . __($instance['signup_text'], 'mailchimp-widget') . '" /></form><script type="text/javascript"> jQuery(\'#' . $this->id_base . '_form-' . $this->number . '\').ns_mc_widget({"url" : "' . $_SERVER['PHP_SELF'] . '", "cookie_id" : "'. $this->id_base . '-' . $this->number . '", "cookie_value" : "' . $this->hash_mailing_list_id() . '", "loader_graphic" : "' . $this->default_loader_graphic . '"}); </script>';
 				
 			}
 

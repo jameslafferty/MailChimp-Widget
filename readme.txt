@@ -37,6 +37,9 @@ There are no Frequently Asked Questions yet... This is the first release!
 
 == Changelog ==
 
+= 0.1.3 =
+* Began internationalizing the plugin.
+
 = 0.1.2 =
 * Fixed issue with widget button label.
 
@@ -50,6 +53,8 @@ There are no Frequently Asked Questions yet... This is the first release!
 * First release.
 
 == Upgrade Notice ==
+= 0.1.3 =
+* Added .pot file and languages folder.
 
 = 0.1.1 =
 * Fixed link in admin notices to be actually functional.

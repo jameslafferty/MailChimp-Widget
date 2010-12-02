@@ -86,6 +86,8 @@ class NS_Widget_MailChimp extends WP_Widget {
 			
 			$form .= '<p><label>' . __('Sign Up Button Text :', 'mailchimp-widget') . '<input class="widefat" id="' . $this->get_field_id('signup_text') .'" name="' . $this->get_field_name('signup_text') . '" value="' . $signup_text . '" /></label></p>';
 			
+			$form .= '<p><input type="checkbox" class="checkbox" /><label>Collect first name.</label><input type="checkbox" class="checkbox" /><label>Collect last name.</label></p><p>These fields won\'t (and shouldn\'t) be required. Only ask your users for stuff you really need to have.</p>';
+			
 		} else { //If an API key hasn't been entered, direct the user to set one up.
 			
 			$form = $this->ns_mc_plugin->get_admin_notices();

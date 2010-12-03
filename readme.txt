@@ -23,7 +23,7 @@ The MailChimp Widget:
 == Installation ==
 1. Upload the mailchimp_widget to /wp-content/plugins/.
 1. Activate the plugin through the "Plugins" menu in WordPress.
-1. Enter a valid MailChimp API key on the plugin admin page ("Settings" >> "MailChimp Widget").
+1. Enter a valid MailChimp API key on the plugin admin page ("Settings" >> "MailChimp Widget"). You can obtain a MailChimp API key after creating an account at MailChimp.com.
 1. Drag the widget into your sidebar from the "Widgets" menu in WordPress.
 1. Select a mailing list and you're ready to go!
 
@@ -36,6 +36,12 @@ There are no Frequently Asked Questions yet... This is the first release!
 3. The widget displays in your sidebar.
 
 == Changelog ==
+
+= 0.2.1 =
+* Wrap spl_autoload in try catch to prevent fatal error on some systems.
+
+= 0.2 =
+* Adds optional first and last name fields.
 
 = 0.1.3 =
 * Began internationalizing the plugin.
@@ -53,6 +59,13 @@ There are no Frequently Asked Questions yet... This is the first release!
 * First release.
 
 == Upgrade Notice ==
+
+= 0.2.1 =
+* Bugfix to correct functioning of spl_autoload on some systems.
+
+= 0.2 =
+* Now have optional first and last name fields for the widget.
+
 = 0.1.3 =
 * Added .pot file and languages folder.
 
@@ -63,4 +76,4 @@ There are no Frequently Asked Questions yet... This is the first release!
 * This may help if you're getting an error on activation.
 
 = 0.1 =
-First release.
+* First release.

@@ -6,7 +6,7 @@
 
 class NS_Widget_MailChimp extends WP_Widget {
 	
-	private $default_loader_graphic = '/wp-content/plugins/mailchimp_widget/images/ajax-loader.gif';
+	private $default_loader_graphic = '/wp-content/plugins/mailchimp-widget/images/ajax-loader.gif';
 	private $default_signup_text = 'Join now!';
 	private $default_title = 'Sign up for our mailing list.';
 	

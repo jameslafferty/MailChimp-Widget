@@ -1,4 +1,4 @@
-# Translation of the WordPress plugin MailChimp Widget by jameslafferty.
+# Translation of the WordPress plugin   by .
 # Copyright (C) 2010 
 # This file is distributed under the same license as the  package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  \n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/mailchimp-widget\n"
-"POT-Creation-Date: 2010-12-01 04:30+0000\n"
+"POT-Creation-Date: 2010-12-03 06:52+0000\n"
 "PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,36 +16,36 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: lib/ns_mc_plugin.class.php:87
+#: lib/ns_mc_plugin.class.php:92
 msgid "What you're trying to do looks a little shady."
 msgstr ""
 
-#: lib/ns_mc_plugin.class.php:105
+#: lib/ns_mc_plugin.class.php:110
 msgid "MailChimp Widget Settings"
 msgstr ""
 
-#: lib/ns_mc_plugin.class.php:105
+#: lib/ns_mc_plugin.class.php:110
 msgid ""
 "Enter a valid MailChimp API key here to get started. Once you've done that, "
 "you can use the MailChimp Widget from the Widgets menu. You will need to "
 "have at least MailChimp list set up before the using the widget."
 msgstr ""
 
-#: lib/ns_mc_plugin.class.php:105
+#: lib/ns_mc_plugin.class.php:110
 msgid "Save Changes"
 msgstr ""
 
-#: lib/ns_mc_plugin.class.php:115
+#: lib/ns_mc_plugin.class.php:120
 msgid ""
 "You'll need to set up the MailChimp signup widget plugin options before "
 "using it. "
 msgstr ""
 
-#: lib/ns_mc_plugin.class.php:115
+#: lib/ns_mc_plugin.class.php:120
 msgid "You can make your changes"
 msgstr ""
 
-#: lib/ns_mc_plugin.class.php:115
+#: lib/ns_mc_plugin.class.php:120
 msgid "here"
 msgstr ""
 
@@ -55,6 +55,10 @@ msgstr ""
 
 #: lib/ns_widget_mailchimp.class.php:24
 msgid "MailChimp List Signup"
+msgstr ""
+
+#: lib/ns_widget_mailchimp.class.php:71
+msgid "General Settings"
 msgstr ""
 
 #: lib/ns_widget_mailchimp.class.php:71
@@ -77,26 +81,52 @@ msgstr ""
 msgid "Sign Up Button Text :"
 msgstr ""
 
-#: lib/ns_widget_mailchimp.class.php:112 lib/ns_widget_mailchimp.class.php:150
+#: lib/ns_widget_mailchimp.class.php:89
+msgid "Personal Information"
+msgstr ""
+
+#: lib/ns_widget_mailchimp.class.php:89
+msgid ""
+"These fields won't (and shouldn't) be required. Should the widget form "
+"collect users' first and last names?"
+msgstr ""
+
+#: lib/ns_widget_mailchimp.class.php:89
+msgid "Collect first name."
+msgstr ""
+
+#: lib/ns_widget_mailchimp.class.php:89
+msgid "Collect last name."
+msgstr ""
+
+#: lib/ns_widget_mailchimp.class.php:114 lib/ns_widget_mailchimp.class.php:165
 msgid "There was a problem processing your submission."
 msgstr ""
 
-#: lib/ns_widget_mailchimp.class.php:137
+#: lib/ns_widget_mailchimp.class.php:152
 msgid ""
 "Thank you for joining our mailing list. Please check your email for a "
 "confirmation link."
 msgstr ""
 
-#: lib/ns_widget_mailchimp.class.php:180
+#: lib/ns_widget_mailchimp.class.php:207
 msgid ""
 "Thank you for joining our mailing list. Please check your email for a "
 "confirmation link"
 msgstr ""
 
-#: lib/ns_widget_mailchimp.class.php:232
+#: lib/ns_widget_mailchimp.class.php:267
+msgid "First Name :"
+msgstr ""
+
+#: lib/ns_widget_mailchimp.class.php:275
+msgid "Last Name :"
+msgstr ""
+
+#: lib/ns_widget_mailchimp.class.php:279
 msgid "Email Address :"
 msgstr ""
 
-#: lib/ns_widget_mailchimp.class.php:232
+#: lib/ns_widget_mailchimp.class.php:279
 msgid "signup_text"
 msgstr ""

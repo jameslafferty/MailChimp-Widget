@@ -1,14 +1,14 @@
 10
 
 dir
-317757
+319729
 http://plugins.svn.wordpress.org/mailchimp-widget/trunk/languages
 http://plugins.svn.wordpress.org
 
 
 
-2010-12-01T22:45:12.347825Z
-317757
+2010-12-03T06:55:09.940070Z
+318380
 jameslafferty
 
 
@@ -32,10 +32,10 @@ file
 
 
 
-2010-12-01T05:07:06.000000Z
-87c0c2d65093f2fd44b211c56aeeb359
-2010-12-01T22:45:12.347825Z
-317757
+2010-12-03T06:52:43.000000Z
+7ce68a6fb06ee9705161dbbc18817ce2
+2010-12-03T06:55:09.940070Z
+318380
 jameslafferty
 
 
@@ -58,5 +58,5 @@ jameslafferty
 
 
 
-2619
+3222
 

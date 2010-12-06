@@ -36,6 +36,9 @@ There are no Frequently Asked Questions yet... This is the first release!
 3. The widget displays in your sidebar.
 
 == Changelog ==
+= 0.3 =
+* Added Danish translation of plugin.
+* Fixed code for loading translations.
 
 = 0.2.1 =
 * Wrap spl_autoload in try catch to prevent fatal error on some systems.
@@ -60,6 +63,10 @@ There are no Frequently Asked Questions yet... This is the first release!
 
 == Upgrade Notice ==
 
+= 0.3 =
+* Fixes a bug in translation code.
+* Adds a Danish translation of the plugin.
+
 = 0.2.1 =
 * Bugfix to correct functioning of spl_autoload on some systems.
 
@@ -77,3 +84,8 @@ There are no Frequently Asked Questions yet... This is the first release!
 
 = 0.1 =
 * First release.
+
+== Internationalization (i18n) ==
+Currently, translations are included to the following languages:
+
+* da_DK - Danish in Denmark. Thank you to [joynielsen](http://joyfulliving.dk) for contributing!

@@ -13,7 +13,7 @@ class NS_MC_Plugin {
 	private static $name = 'NS_MC_Plugin';
 	private static $prefix = 'ns_mc';
 	private static $public_option = 'no';
-	private static $text_domain = 'mailchimp-widget';
+	private static $textdomain = 'mailchimp-widget';
 	
 	private function __construct () {
 		
@@ -47,7 +47,7 @@ class NS_MC_Plugin {
 		 *
 		 */
 		
-		add_action('init', array(&$this, 'load_text_domain'));
+		$this->load_text_domain();
 		
 	}
 	
@@ -157,7 +157,7 @@ class NS_MC_Plugin {
 	
 	public function load_text_domain () {
 		
-		load_plugin_textdomain(self::$text_domain, false, dirname(plugin_basename(__FILE__)) . '/languages/');
+		load_plugin_textdomain(self::$textdomain, null, str_replace('lib', 'languages', dirname(plugin_basename(__FILE__))));
 		
 	}
 	

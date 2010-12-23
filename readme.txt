@@ -31,7 +31,7 @@ If you find this plugin useful, please rate it and/or make a donation.
 1. Please rate the plugin.
 
 == Frequently Asked Questions ==
-=I can't activate the plugin because it triggers this error: "Parse error: syntax error, unexpected '{' in .../wp-content/plugins/mailchimp-widget/mailchimp-widget.php on line 40." What's going on?=
+= I can't activate the plugin because it triggers this error: "Parse error: syntax error, unexpected '{' in .../wp-content/plugins/mailchimp-widget/mailchimp-widget.php on line 40." What's going on? =
 Check your PHP version. You need at least PHP 5.1.2 to use this plugin.
 
 == Screenshots ==

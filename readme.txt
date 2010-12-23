@@ -20,15 +20,19 @@ The MailChimp Widget:
 *	is AJAX-enabled, but degrades gracefully if Javascript isn't turned on
 *	encourages the collection of only information that you actually need (i.e., an email address) to send your mailers
 
+If you find this plugin useful, please rate it and/or make a donation.
+
 == Installation ==
 1. Upload the mailchimp_widget to /wp-content/plugins/.
 1. Activate the plugin through the "Plugins" menu in WordPress.
 1. Enter a valid MailChimp API key on the plugin admin page ("Settings" >> "MailChimp Widget"). You can obtain a MailChimp API key after creating an account at MailChimp.com.
 1. Drag the widget into your sidebar from the "Widgets" menu in WordPress.
 1. Select a mailing list and you're ready to go!
+1. Please rate the plugin.
 
 == Frequently Asked Questions ==
-There are no Frequently Asked Questions yet... This is the first release!
+=I can't activate the plugin because it triggers this error: "Parse error: syntax error, unexpected '{' in .../wp-content/plugins/mailchimp-widget/mailchimp-widget.php on line 40." What's going on?=
+Check your PHP version. You need at least PHP 5.1.2 to use this plugin.
 
 == Screenshots ==
 1. Just add your MailChimp API key.

@@ -36,6 +36,9 @@ There are no Frequently Asked Questions yet... This is the first release!
 3. The widget displays in your sidebar.
 
 == Changelog ==
+= 0.5 =
+* Updated fields to allow customization of success and failure notification messages.
+
 = 0.3 =
 * Added Danish translation of plugin.
 * Fixed code for loading translations.
@@ -62,6 +65,8 @@ There are no Frequently Asked Questions yet... This is the first release!
 * First release.
 
 == Upgrade Notice ==
+= 0.5 =
+* Customize visitor signup success and failure messages.
 
 = 0.3 =
 * Fixes a bug in translation code.

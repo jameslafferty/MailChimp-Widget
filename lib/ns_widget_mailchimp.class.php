@@ -6,8 +6,10 @@
 
 class NS_Widget_MailChimp extends WP_Widget {
 	
+	private $default_failure_message = 'There was a problem processing your submission.';
 	private $default_loader_graphic = '/wp-content/plugins/mailchimp-widget/images/ajax-loader.gif';
 	private $default_signup_text = 'Join now!';
+	private $default_success_message = 'Thank you for joining our mailing list. Please check your email for a confirmation link.';
 	private $default_title = 'Sign up for our mailing list.';
 	
 	private $ns_mc_plugin;
@@ -59,8 +61,10 @@ class NS_Widget_MailChimp extends WP_Widget {
 			
 			$defaults = array(
 
+				'failure_message' => __($this->default_failure_message, 'mailchimp-widget'),
 				'title' => __($this->default_title, 'mailchimp-widget'),
-				'signup_text' => __($this->default_signup_text, 'mailchimp-widget')
+				'signup_text' => __($this->default_signup_text, 'mailchimp-widget'),
+				'success_message' => __($this->default_success_message, 'mailchimp-widget'),
 
 			);
 
@@ -70,7 +74,7 @@ class NS_Widget_MailChimp extends WP_Widget {
 
 			$form = '<h3>' . __('General Settings', 'mailchimp-widget') . '</h3><p><label>' . __('Title :', 'mailchimp-widget') . '<input class="widefat" id=""' . $this->get_field_id('title') . '" name="' . $this->get_field_name('title') . '" type="text" value="' . $title . '" /></label></p>';
 			
-			$form .= '<p><label>' . __('Select a Mailing List:', 'mailchimp-widget') . '';
+			$form .= '<p><label>' . __('Select a Mailing List :', 'mailchimp-widget') . '';
 			
 			$form .= '<select class="widefat" id="' . $this->get_field_id('current_mailing_list') . '" name="' . $this->get_field_name('current_mailing_list') . '">';
 			
@@ -87,6 +91,8 @@ class NS_Widget_MailChimp extends WP_Widget {
 			$form .= '<p><label>' . __('Sign Up Button Text :', 'mailchimp-widget') . '<input class="widefat" id="' . $this->get_field_id('signup_text') .'" name="' . $this->get_field_name('signup_text') . '" value="' . $signup_text . '" /></label></p>';
 			
 			$form .= '<h3>' . __('Personal Information', 'mailchimp-widget') . '</h3><p>' . __("These fields won't (and shouldn't) be required. Should the widget form collect users' first and last names?", 'mailchimp-widget') . '</p><p><input type="checkbox" class="checkbox" id="' . $this->get_field_id('collect_first') . '" name="' . $this->get_field_name('collect_first') . '" ' . checked($collect_first, true, false) . ' /> <label for="' . $this->get_field_id('collect_first') . '" >' . __('Collect first name.') . '</label><br /><input type="checkbox" class="checkbox" id="' . $this->get_field_id('collect_last') . '" name="' . $this->get_field_name('collect_last') . '" ' . checked($collect_last, true, false) . ' /> <label>' . __('Collect last name.', 'mailchimp-widget') . '</label></p>';
+			
+			$form .= '<h3>' . __('Notifications', 'mailchimp-widget') . '</h3><p>' . __('Use these fields to customize what your visitors see after they submit the form', 'mailchimp-widget') . '</p><p><label>' . __('Success :', 'mailchimp-widget') . '<textarea class="widefat" id="' . $this->get_field_id('success_message') . '" name="' . $this->get_field_name('success_message') . '">' . $success_message . '</textarea></label></p><p><label>' . __('Failure :', 'mailchimp-widget') . '<textarea class="widefat" id="' . $this->get_field_id('failure_message') . '" name="' . $this->get_field_name('failure_message') . '">' . $failure_message . '</textarea></label></p>';
 			
 		} else { //If an API key hasn't been entered, direct the user to set one up.
 			
@@ -111,7 +117,7 @@ class NS_Widget_MailChimp extends WP_Widget {
 			
 			//Assume the worst.
 			$response = '';
-			$result = array('success' => false, 'error' => __('There was a problem processing your submission.', 'mailchimp-widget'));
+			$result = array('success' => false, 'error' => $this->get_failure_message($_GET['ns_mc_number']));
 			
 			$merge_vars = array();
 			
@@ -149,7 +155,7 @@ class NS_Widget_MailChimp extends WP_Widget {
 					
 						$result['success'] = true;
 						$result['error'] = '';
-						$result['success_message'] = __('Thank you for joining our mailing list. Please check your email for a confirmation link.', 'mailchimp-widget');
+						$result['success_message'] =  $this->get_success_message($_GET['ns_mc_number']);
 						$response = json_encode($result);
 						
 					}
@@ -162,7 +168,7 @@ class NS_Widget_MailChimp extends WP_Widget {
 			
 		} elseif (isset($_POST[$this->id_base . '_email'])) {
 			
-			$this->subscribe_errors = '<div class="error">' . __('There was a problem processing your submission.', 'mailchimp-widget') . '</div>';
+			$this->subscribe_errors = '<div class="error">'  . $this->get_failure_message($_POST['ns_mc_number']) .  '</div>';
 			
 			if (! is_email($_POST[$this->id_base . '_email'])) {
 				
@@ -204,7 +210,7 @@ class NS_Widget_MailChimp extends WP_Widget {
 				
 				$this->successful_signup = true;
 				
-				$this->signup_success_message = '<p>' . __('Thank you for joining our mailing list. Please check your email for a confirmation link', 'mailchimp-widget') . '</p>';
+				$this->signup_success_message = '<p>' . $this->get_success_message($_POST['ns_mc_number']) . '</p>';
 				
 				return true;
 				
@@ -229,7 +235,11 @@ class NS_Widget_MailChimp extends WP_Widget {
 		
 		$instance['current_mailing_list'] = esc_attr($new_instance['current_mailing_list']);
 		
+		$instance['failure_message'] = esc_attr($new_instance['failure_message']);
+		
 		$instance['signup_text'] = esc_attr($new_instance['signup_text']);
+		
+		$instance['success_message'] = esc_attr($new_instance['success_message']);
 		
 		$instance['title'] = esc_attr($new_instance['title']);
 		
@@ -313,6 +323,32 @@ class NS_Widget_MailChimp extends WP_Widget {
 		$options = get_option($this->option_name);
 		
 		return $options[$number]['current_mailing_list'];
+		
+	}
+	
+	/**
+	 * @author James Lafferty
+	 * @since 0.5
+	 */
+	
+	private function get_failure_message ($number = null) {
+		
+		$options = get_option($this->option_name);
+		
+		return $options[$number]['failure_message'];
+		
+	}
+	
+	/**
+	 * @author James Lafferty
+	 * @since 0.5
+	 */
+	
+	private function get_success_message ($number = null) {
+		
+		$options = get_option($this->option_name);
+		
+		return $options[$number]['success_message'];
 		
 	}
 	

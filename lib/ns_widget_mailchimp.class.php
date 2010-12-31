@@ -151,6 +151,8 @@ class NS_Widget_MailChimp extends WP_Widget {
 				
 					if (false == $subscribed) {
 						
+						$response = json_encode($result);
+						
 					} else {
 					
 						$result['success'] = true;
@@ -282,7 +284,7 @@ class NS_Widget_MailChimp extends WP_Widget {
 				
 				if ($instance['collect_last']) {
 					
-					$collect_first = '<label>' . __('Last Name :', 'mailchimp-widget') . '<input type="text" name="' . $this->id_base . '_last_name" /></label><br />';
+					$collect_last = '<label>' . __('Last Name :', 'mailchimp-widget') . '<input type="text" name="' . $this->id_base . '_last_name" /></label><br />';
 					
 				}
 			

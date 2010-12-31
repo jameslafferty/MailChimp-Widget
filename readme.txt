@@ -40,6 +40,10 @@ Check your PHP version. You need at least PHP 5.1.2 to use this plugin.
 3. The widget displays in your sidebar.
 
 == Changelog ==
+= 0.5.2 =
+* Fixed bug that prevented first and last name fields from both displaying.
+* Fixed bug that hid error messages when MailChimp portion of the signup was unsuccessful.
+
 = 0.5 =
 * Updated fields to allow customization of success and failure notification messages.
 
@@ -69,6 +73,9 @@ Check your PHP version. You need at least PHP 5.1.2 to use this plugin.
 * First release.
 
 == Upgrade Notice ==
+= 0.5.2 =
+* Major bug fixes to display error message when sign up fails on the MailChimp side and to display both first and last name fields when set up.
+
 = 0.5 =
 * Customize visitor signup success and failure messages.
 

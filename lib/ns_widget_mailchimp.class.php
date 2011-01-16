@@ -140,13 +140,13 @@ class NS_Widget_MailChimp extends WP_Widget {
 					
 				} else {
 					
-					if (is_string($_GET[$this->id_base . '_first_name'])) {
+					if (isset($_GET[$this->id_base . '_first_name']) && is_string($_GET[$this->id_base . '_first_name'])) {
 						
 						$merge_vars['FNAME'] = $_GET[$this->id_base . '_first_name'];
 						
 					}
 					
-					if (is_string($_GET[$this->id_base . '_last_name'])) {
+					if (isset($_GET[$this->id_base . '_last_name']) && is_string($_GET[$this->id_base . '_last_name'])) {
 						
 						$merge_vars['LNAME'] = $_GET[$this->id_base . '_last_name'];
 						

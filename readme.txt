@@ -47,7 +47,7 @@ Check your PHP version. You need at least PHP 5.1.2 to use this plugin.
 * Cleaned up a few more WP_DEBUG mode errors.
 
 = 0.6 =
-* Cleaned up errors from WP-Debug mode.
+* Cleaned up errors from WP_DEBUG mode.
 
 = 0.5.2 =
 * Fixed bug that prevented first and last name fields from both displaying.

@@ -6,11 +6,11 @@
 
 class NS_Widget_MailChimp extends WP_Widget {
 	
-	private $default_failure_message = 'There was a problem processing your submission.';
+	private $default_failure_message;
 	private $default_loader_graphic = '/wp-content/plugins/mailchimp-widget/images/ajax-loader.gif';
-	private $default_signup_text = 'Join now!';
-	private $default_success_message = 'Thank you for joining our mailing list. Please check your email for a confirmation link.';
-	private $default_title = 'Sign up for our mailing list.';
+	private $default_signup_text;
+	private $default_success_message;
+	private $default_title;
 	private $successful_signup = false;
 	private $subscribe_errors;
 	
@@ -22,6 +22,11 @@ class NS_Widget_MailChimp extends WP_Widget {
 	 */
 	
 	public function NS_Widget_MailChimp () {
+		
+		$this->default_failure_message = __('There was a problem processing your submission.');
+		$this->default_signup_text = __('Join now!');
+		$this->default_success_message = __('Thank you for joining our mailing list. Please check your email for a confirmation link.');
+		$this->default_title = __('Sign up for our mailing list.');
 		
 		$widget_options = array('classname' => 'widget_ns_mailchimp', 'description' => __( "Displays a sign-up form for a MailChimp mailing list.", 'mailchimp-widget'));
 		
@@ -63,10 +68,10 @@ class NS_Widget_MailChimp extends WP_Widget {
 			
 			$defaults = array(
 
-				'failure_message' => __($this->default_failure_message, 'mailchimp-widget'),
-				'title' => __($this->default_title, 'mailchimp-widget'),
-				'signup_text' => __($this->default_signup_text, 'mailchimp-widget'),
-				'success_message' => __($this->default_success_message, 'mailchimp-widget'),
+				'failure_message' => $this->default_failure_message,
+				'title' => $this->default_title,
+				'signup_text' => $this->default_signup_text,
+				'success_message' => $this->default_success_message
 
 			);
 
@@ -92,7 +97,7 @@ class NS_Widget_MailChimp extends WP_Widget {
 			
 			$form .= '<p><label>' . __('Sign Up Button Text :', 'mailchimp-widget') . '<input class="widefat" id="' . $this->get_field_id('signup_text') .'" name="' . $this->get_field_name('signup_text') . '" value="' . $signup_text . '" /></label></p>';
 			
-			$form .= '<h3>' . __('Personal Information', 'mailchimp-widget') . '</h3><p>' . __("These fields won't (and shouldn't) be required. Should the widget form collect users' first and last names?", 'mailchimp-widget') . '</p><p><input type="checkbox" class="checkbox" id="' . $this->get_field_id('collect_first') . '" name="' . $this->get_field_name('collect_first') . '" ' . checked($collect_first, true, false) . ' /> <label for="' . $this->get_field_id('collect_first') . '" >' . __('Collect first name.') . '</label><br /><input type="checkbox" class="checkbox" id="' . $this->get_field_id('collect_last') . '" name="' . $this->get_field_name('collect_last') . '" ' . checked($collect_last, true, false) . ' /> <label>' . __('Collect last name.', 'mailchimp-widget') . '</label></p>';
+			$form .= '<h3>' . __('Personal Information', 'mailchimp-widget') . '</h3><p>' . __("These fields won't (and shouldn't) be required. Should the widget form collect users' first and last names?", 'mailchimp-widget') . '</p><p><input type="checkbox" class="checkbox" id="' . $this->get_field_id('collect_first') . '" name="' . $this->get_field_name('collect_first') . '" ' . checked($collect_first, true, false) . ' /> <label for="' . $this->get_field_id('collect_first') . '" >' . __('Collect first name.', 'mailchimp-widget') . '</label><br /><input type="checkbox" class="checkbox" id="' . $this->get_field_id('collect_last') . '" name="' . $this->get_field_name('collect_last') . '" ' . checked($collect_last, true, false) . ' /> <label>' . __('Collect last name.', 'mailchimp-widget') . '</label></p>';
 			
 			$form .= '<h3>' . __('Notifications', 'mailchimp-widget') . '</h3><p>' . __('Use these fields to customize what your visitors see after they submit the form', 'mailchimp-widget') . '</p><p><label>' . __('Success :', 'mailchimp-widget') . '<textarea class="widefat" id="' . $this->get_field_id('success_message') . '" name="' . $this->get_field_name('success_message') . '">' . $success_message . '</textarea></label></p><p><label>' . __('Failure :', 'mailchimp-widget') . '<textarea class="widefat" id="' . $this->get_field_id('failure_message') . '" name="' . $this->get_field_name('failure_message') . '">' . $failure_message . '</textarea></label></p>';
 			

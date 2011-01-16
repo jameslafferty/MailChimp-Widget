@@ -69,7 +69,7 @@ class NS_MC_Plugin {
 		
 		if (plugin_basename(realpath(dirname(__FILE__) . '/../mailchimp-widget.php')) == $file) {
 			
-			$links[] = '<a href="' . $this->donate_link . '">' . __('Donate') . '</a>';
+			$links[] = '<a href="' . $this->donate_link . '">' . __('Donate', 'mailchimp-widget') . '</a>';
 			
 		}
 		

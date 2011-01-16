@@ -8,6 +8,8 @@ class NS_MC_Plugin {
 	
 	private $options;
 	
+	private $donate_link = 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JSL4JTA4KMZLG';
+	
 	private static $instance;
 	private static $mcapi;
 	private static $name = 'NS_MC_Plugin';
@@ -43,6 +45,8 @@ class NS_MC_Plugin {
 		
 		add_action('widgets_init', create_function('', 'return register_widget("NS_Widget_MailChimp");'));
 		
+		add_filter('plugin_row_meta', array(&$this, 'add_plugin_meta_links'), 10, 2);
+		
 		/**
 		 *
 		 */
@@ -61,6 +65,18 @@ class NS_MC_Plugin {
 		
 		return self::$instance;
 
+	}
+	
+	public function add_plugin_meta_links ($links, $file) {
+		
+		if (plugin_basename(realpath(dirname(__FILE__) . '/../mailchimp-widget.php')) == $file) {
+			
+			$links[] = '<a href="' . $this->donate_link . '">' . __('Donate') . '</a>';
+			
+		}
+		
+		return $links;
+		
 	}
 	
 	/**

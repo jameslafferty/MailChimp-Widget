@@ -40,6 +40,9 @@ Check your PHP version. You need at least PHP 5.1.2 to use this plugin.
 3. The widget displays in your sidebar.
 
 == Changelog ==
+= 0.6 =
+* Cleaned up errors from WP-Debug mode.
+
 = 0.5.2 =
 * Fixed bug that prevented first and last name fields from both displaying.
 * Fixed bug that hid error messages when MailChimp portion of the signup was unsuccessful.
@@ -73,6 +76,9 @@ Check your PHP version. You need at least PHP 5.1.2 to use this plugin.
 * First release.
 
 == Upgrade Notice ==
+= 0.6 =
+* Cleaned up some minor errors from WP_DEBUG.
+
 = 0.5.2 =
 * Major bug fixes to display error message when sign up fails on the MailChimp side and to display both first and last name fields when set up.
 

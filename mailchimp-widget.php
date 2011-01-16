@@ -4,7 +4,7 @@ Plugin Name: MailChimp Widget
 Plugin URI: https://github.com/kalchas
 Description: 
 Author: James Lafferty
-Version: 0.5.2
+Version: 0.6
 Author URI: https://github.com/kalchas
 License: GPL2
 */

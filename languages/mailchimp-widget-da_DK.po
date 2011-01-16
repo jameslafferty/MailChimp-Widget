@@ -1,0 +1,122 @@
+# Translation of the WordPress plugin MailChimp Widget by jameslafferty.
+# Copyright (C) 2010
+# This file is distributed under the same license as the  package.
+# jameslafferty <james@nearlysensical.com>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/mailchimp-widget\n"
+"POT-Creation-Date: 2010-12-03 06:52+0000\n"
+"PO-Revision-Date: 2010-12-06 17:23+0100\n"
+"Last-Translator: Joy Nielsen <fengshuiwebdesign@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: lib/ns_mc_plugin.class.php:92
+msgid "What you're trying to do looks a little shady."
+msgstr "Det du prøver på er en smule utydeligt"
+
+#: lib/ns_mc_plugin.class.php:110
+msgid "MailChimp Widget Settings"
+msgstr "MailChimp Widget indstillinger"
+
+#: lib/ns_mc_plugin.class.php:110
+msgid "Enter a valid MailChimp API key here to get started. Once you've done that, you can use the MailChimp Widget from the Widgets menu. You will need to have at least MailChimp list set up before the using the widget."
+msgstr "Skriv en gyldig MainChimp API nøgle her for at komme i gang. Når du har indsat nøglen kan du bruge MailChimp Widget fra widgets menuen. Du skal have mindst een MailChimp mailingliste sat op før du kan bruge MailChimp Widget. "
+
+#: lib/ns_mc_plugin.class.php:110
+msgid "Save Changes"
+msgstr "Gem ændringer"
+
+#: lib/ns_mc_plugin.class.php:120
+msgid "You'll need to set up the MailChimp signup widget plugin options before using it. "
+msgstr "Du skal udfylde plugin til MailChimp tilmeld-widget før du bruger det."
+
+#: lib/ns_mc_plugin.class.php:120
+msgid "You can make your changes"
+msgstr "Du kan skrive dine ændringer"
+
+#: lib/ns_mc_plugin.class.php:120
+msgid "here"
+msgstr "her"
+
+#: lib/ns_widget_mailchimp.class.php:22
+msgid "Displays a sign-up form for a MailChimp mailing list."
+msgstr "Viser en tilmeldingsformular til en MailChimp mailingliste"
+
+#: lib/ns_widget_mailchimp.class.php:24
+msgid "MailChimp List Signup"
+msgstr "MailChimp liste tilmelding"
+
+#: lib/ns_widget_mailchimp.class.php:71
+msgid "General Settings"
+msgstr "Generelle indstillinger"
+
+#: lib/ns_widget_mailchimp.class.php:71
+msgid "Title :"
+msgstr "Titel:"
+
+#: lib/ns_widget_mailchimp.class.php:73
+msgid "Select a Mailing List:"
+msgstr "Vælg en mailingliste:"
+
+#: lib/ns_widget_mailchimp.class.php:81
+msgid "name"
+msgstr "Navn"
+
+#: lib/ns_widget_mailchimp.class.php:85
+msgid "This is the list your users will be signing up for in your sidebar."
+msgstr "Det er den her liste, dine bruger bliver tilmeldt fra din sidebar."
+
+#: lib/ns_widget_mailchimp.class.php:87
+msgid "Sign Up Button Text :"
+msgstr "Tilmeldings knap tekst:"
+
+#: lib/ns_widget_mailchimp.class.php:89
+msgid "Personal Information"
+msgstr "Personlig information"
+
+#: lib/ns_widget_mailchimp.class.php:89
+msgid "These fields won't (and shouldn't) be required. Should the widget form collect users' first and last names?"
+msgstr "Disse felter er ikke (og bør ikke være) påkrævede. Skal widget formularen bede om brugerens fornavn og efternavn?"
+
+#: lib/ns_widget_mailchimp.class.php:89
+msgid "Collect first name."
+msgstr "Bed om fornavn."
+
+#: lib/ns_widget_mailchimp.class.php:89
+msgid "Collect last name."
+msgstr "Bed om efternavn."
+
+#: lib/ns_widget_mailchimp.class.php:114
+#: lib/ns_widget_mailchimp.class.php:165
+msgid "There was a problem processing your submission."
+msgstr "Der var et problem med din tilmelding."
+
+#: lib/ns_widget_mailchimp.class.php:152
+msgid "Thank you for joining our mailing list. Please check your email for a confirmation link."
+msgstr "Tak fordi du tilmeldte dig til vores mailingliste. Tjek din email for link hvor du kan bekræfte din tilmelding."
+
+#: lib/ns_widget_mailchimp.class.php:207
+msgid "Thank you for joining our mailing list. Please check your email for a confirmation link"
+msgstr "Tak fordi du tilmeldte dig til vores mailingliste. Tjek din email for link hvor du kan bekræfte din tilmelding."
+
+#: lib/ns_widget_mailchimp.class.php:267
+msgid "First Name :"
+msgstr "Fornavn:"
+
+#: lib/ns_widget_mailchimp.class.php:275
+msgid "Last Name :"
+msgstr "Efternavn:"
+
+#: lib/ns_widget_mailchimp.class.php:279
+msgid "Email Address :"
+msgstr "Email:"
+
+#: lib/ns_widget_mailchimp.class.php:279
+msgid "signup_text"
+msgstr "Tilmeldings tekst"
+

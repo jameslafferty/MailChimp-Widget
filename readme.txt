@@ -40,8 +40,11 @@ Check your PHP version. You need at least PHP 5.1.2 to use this plugin.
 3. The widget displays in your sidebar.
 
 == Changelog ==
+= 0.6.2 =
+* Removed old merge data. Thank you to [huguespisapia](http://wordpress.org/support/profile/huguespisapia) for letting me know about this.
+
 = 0.6.1 =
-*Cleaned up a few more WP_DEBUG mode errors.
+* Cleaned up a few more WP_DEBUG mode errors.
 
 = 0.6 =
 * Cleaned up errors from WP-Debug mode.
@@ -79,6 +82,9 @@ Check your PHP version. You need at least PHP 5.1.2 to use this plugin.
 * First release.
 
 == Upgrade Notice ==
+= 0.6.2 =
+* Removed old merge data. Thank you to [huguespisapia](http://wordpress.org/support/profile/huguespisapia) for letting me know about this. (critical upgrade)
+
 = 0.6.1 =
 * Corrects some additional minor errors that come up in WP_DEBUG mode.
 

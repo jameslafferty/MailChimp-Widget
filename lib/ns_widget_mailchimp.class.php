@@ -11,11 +11,8 @@ class NS_Widget_MailChimp extends WP_Widget {
 	private $default_signup_text = 'Join now!';
 	private $default_success_message = 'Thank you for joining our mailing list. Please check your email for a confirmation link.';
 	private $default_title = 'Sign up for our mailing list.';
-<<<<<<< HEAD
-=======
 	private $successful_signup = false;
 	private $subscribe_errors;
->>>>>>> 98d063702c946fc36209b5c6093f63d5a61b2111
 	
 	private $ns_mc_plugin;
 	
@@ -263,11 +260,7 @@ class NS_Widget_MailChimp extends WP_Widget {
 		
 		extract($args);
 		
-<<<<<<< HEAD
-		if ($this->hash_mailing_list_id($this->number) == $_COOKIE[$this->id_base . '-' . $this->number] || false == $this->ns_mc_plugin->get_mcapi()) {
-=======
 		if ((isset($_COOKIE[$this->id_base . '-' . $this->number]) && $this->hash_mailing_list_id($this->number) == $_COOKIE[$this->id_base . '-' . $this->number]) || false == $this->ns_mc_plugin->get_mcapi()) {
->>>>>>> 98d063702c946fc36209b5c6093f63d5a61b2111
 			
 			return 0;
 			

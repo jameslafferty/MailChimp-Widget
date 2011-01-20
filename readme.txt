@@ -40,6 +40,9 @@ Check your PHP version. You need at least PHP 5.1.2 to use this plugin.
 3. The widget displays in your sidebar.
 
 == Changelog ==
+= 0.7 =
+* Added French language support. Thank you to Frederick Marcoux for this contribution!
+
 = 0.6.2 =
 * Removed old merge data. Thank you to [huguespisapia](http://wordpress.org/support/profile/huguespisapia) for letting me know about this.
 
@@ -82,6 +85,9 @@ Check your PHP version. You need at least PHP 5.1.2 to use this plugin.
 * First release.
 
 == Upgrade Notice ==
+= 0.7 =
+* Adds French language support.
+
 = 0.6.2 =
 * Removed old merge data. Thank you to [huguespisapia](http://wordpress.org/support/profile/huguespisapia) for letting me know about this. (critical upgrade)
 
@@ -123,3 +129,6 @@ Check your PHP version. You need at least PHP 5.1.2 to use this plugin.
 Currently, translations are included to the following languages:
 
 * da_DK - Danish in Denmark. Thank you to [joynielsen](http://joyfulliving.dk) for contributing!
+* fr_FR - French. Thank you to Frederick Marcoux for contributing!
+
+If you're interested in doing a translation into your language, please let me know.

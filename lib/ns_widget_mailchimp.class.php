@@ -71,7 +71,9 @@ class NS_Widget_MailChimp extends WP_Widget {
 				'failure_message' => $this->default_failure_message,
 				'title' => $this->default_title,
 				'signup_text' => $this->default_signup_text,
-				'success_message' => $this->default_success_message
+				'success_message' => $this->default_success_message,
+				'collect_first' => false,
+				'collect_last' => false
 
 			);
 
@@ -87,7 +89,7 @@ class NS_Widget_MailChimp extends WP_Widget {
 			
 			foreach ($this->lists['data'] as $key => $value) {
 				
-				$selected = ($current_mailing_list == $value['id']) ? ' selected="selected" ' : '';
+				$selected = (isset($current_mailing_list) && $current_mailing_list == $value['id']) ? ' selected="selected" ' : '';
 				
 				$form .= '<option ' . $selected . 'value="' . $value['id'] . '">' . __($value['name'], 'mailchimp-widget') . '</option>';
 				

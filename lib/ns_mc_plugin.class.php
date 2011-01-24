@@ -129,9 +129,11 @@ class NS_MC_Plugin {
 	
 	public function get_admin_notices () {
 		
+		global $blog_id;
+		
 		$notice = '<p>';
 		
-		$notice .= __('You\'ll need to set up the MailChimp signup widget plugin options before using it. ', 'mailchimp-widget') . __('You can make your changes', 'mailchimp-widget') . ' <a href="/wp-admin/options-general.php?page=mailchimp-widget/lib/ns_mc_plugin.class.php">' . __('here', 'mailchimp-widget') . '.</a>';
+		$notice .= __('You\'ll need to set up the MailChimp signup widget plugin options before using it. ', 'mailchimp-widget') . __('You can make your changes', 'mailchimp-widget') . ' <a href="' . get_admin_url($blog_id) . 'options-general.php?page=mailchimp-widget/lib/ns_mc_plugin.class.php">' . __('here', 'mailchimp-widget') . '.</a>';
 		
 		$notice .= '</p>';
 		

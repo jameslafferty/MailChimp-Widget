@@ -42,6 +42,7 @@ Check your PHP version. You need at least PHP 5.1.2 to use this plugin.
 == Changelog ==
 = 0.7 =
 * Added French language support. Thank you to Frederick Marcoux for this contribution!
+* Fixed bug affecting display of the settings page on subdirectory installs from the setup notice link. This should also improve the plugin for multisite installations. Thank you to [alex chousmith](http://wordpress.org/support/profile/chousmith) for bringing this to my attention.
 
 = 0.6.2 =
 * Removed old merge data. Thank you to [huguespisapia](http://wordpress.org/support/profile/huguespisapia) for letting me know about this.
@@ -86,7 +87,8 @@ Check your PHP version. You need at least PHP 5.1.2 to use this plugin.
 
 == Upgrade Notice ==
 = 0.7 =
-* Adds French language support.
+* Adds French language support. Thank you Frederick Marcoux for the translation.
+* Fixes settings page link in admin notices for subdirectory installs. Thank you to [alex chousmith](http://wordpress.org/support/profile/chousmith) for bringing this to my attention.
 
 = 0.6.2 =
 * Removed old merge data. Thank you to [huguespisapia](http://wordpress.org/support/profile/huguespisapia) for letting me know about this. (critical upgrade)

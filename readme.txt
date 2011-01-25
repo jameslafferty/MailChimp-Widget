@@ -40,6 +40,10 @@ Check your PHP version. You need at least PHP 5.1.2 to use this plugin.
 3. The widget displays in your sidebar.
 
 == Changelog ==
+
+= 0.7.1 =
+* Restores the original autoloader.
+
 = 0.7 =
 * Added French language support. Thank you to Frederick Marcoux for this contribution!
 * Fixed bug affecting display of the settings page on subdirectory installs from the setup notice link. This should also improve the plugin for multisite installations. Thank you to [alex chousmith](http://wordpress.org/support/profile/chousmith) for bringing this to my attention.
@@ -86,6 +90,9 @@ Check your PHP version. You need at least PHP 5.1.2 to use this plugin.
 * First release.
 
 == Upgrade Notice ==
+= 0.7.1 =
+Fixes namespace issue introduced in 0.7.
+
 = 0.7 =
 * Adds French language support. Thank you Frederick Marcoux for the translation.
 * Fixes settings page link in admin notices for subdirectory installs. Thank you to [alex chousmith](http://wordpress.org/support/profile/chousmith) for bringing this to my attention.

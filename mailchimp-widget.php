@@ -4,7 +4,7 @@ Plugin Name: MailChimp Widget
 Plugin URI: https://github.com/kalchas
 Description: 
 Author: James Lafferty
-Version: 0.7
+Version: 0.7.1
 Author URI: https://github.com/kalchas
 License: GPL2
 */
@@ -25,9 +25,36 @@ License: GPL2
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-require_once('lib/mcapi.class.php');
-require_once('lib/ns_mc_plugin.class.php');
-require_once('lib/ns_widget_mailchimp.class.php');
+/**
+ * Set up the autoloader.
+ */
+
+set_include_path(get_include_path() . PATH_SEPARATOR . realpath(dirname(__FILE__) . '/lib/'));
+
+spl_autoload_extensions('.class.php');
+
+if (! function_exists('buffered_autoloader')) {
+	
+	function buffered_autoloader ($c) {
+
+		try {
+		
+			spl_autoload($c);
+			
+		} catch (Exception $e) {
+			
+			$message = $e->getMessage();
+			
+			return $message;
+			
+		}
+		
+
+	}
+	
+}
+
+spl_autoload_register('buffered_autoloader');
 
 /**
  * Get the plugin object. All the bookkeeping and other setup stuff happens here.

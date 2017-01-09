@@ -1,0 +1,17 @@
+{
+    "name": "jameslafferty/mailchimp-widget",
+    "type": "wordpress-plugin",
+    "license": "GPL2",
+    "authors": [
+        {
+            "name": "James Lafferty",
+            "email": "james@nearlysensical.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "MailChimpWidget\\": "src/lib"
+        }
+    },
+    "require": {}
+}

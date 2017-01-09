@@ -10,7 +10,7 @@ Adds a widget that allows your users to sign up for your MailChimp mailing list.
 
 == Description ==
 
-This plugin provides an easy, lightweight way to let your users sign up for your MailChimp list. You can use it to sign up users for 
+This plugin provides an easy, lightweight way to let your users sign up for your MailChimp list. You can use it to sign up users for
 several different lists by creating multiple instances of the widget. Once a user has signed up, a cookie is stored on their machine to
 prevent the sign up form for that particular list from displaying. Sign ups for other lists will display.
 
@@ -24,15 +24,13 @@ If you find this plugin useful, please rate it and/or make a donation.
 
 == Installation ==
 1. Upload the mailchimp_widget to /wp-content/plugins/.
-1. Activate the plugin through the "Plugins" menu in WordPress.
-1. Enter a valid MailChimp API key on the plugin admin page ("Settings" >> "MailChimp Widget"). You can obtain a MailChimp API key after creating an account at MailChimp.com.
-1. Drag the widget into your sidebar from the "Widgets" menu in WordPress.
-1. Select a mailing list and you're ready to go!
-1. Please rate the plugin.
+2. Activate the plugin through the "Plugins" menu in WordPress.
+3. Enter a valid MailChimp API key on the plugin admin page ("Settings" >> "MailChimp Widget"). You can obtain a MailChimp API key after creating an account at MailChimp.com.
+4. Drag the widget into your sidebar from the "Widgets" menu in WordPress.
+5. Select a mailing list and you're ready to go!
+6. Please rate the plugin.
 
 == Frequently Asked Questions ==
-= I can't activate the plugin because it triggers this error: "Parse error: syntax error, unexpected '{' in .../wp-content/plugins/mailchimp-widget/mailchimp-widget.php on line 40." What's going on? =
-Check your PHP version. You need at least PHP 5.1.2 to use this plugin.
 
 == Screenshots ==
 1. Just add your MailChimp API key.

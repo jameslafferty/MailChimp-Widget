@@ -4,7 +4,6 @@ namespace MailChimpWidget;
 class WidgetJavaScript {
 
 	public static function init($widgetInstance) {
-		print_r($widgetInstance);
 		$handler = function() {
 			if (wp_verify_nonce(
 				$_REQUEST['ns-mailchimp-signup'], 'ns-mailchimp-signup')) {
@@ -31,7 +30,6 @@ class WidgetJavaScript {
 		add_action('wp_ajax_ns_mailchimpsignup', $handler);
 		add_action('wp_ajax_nopriv_ns_mailchimpsignup', $handler);
 		add_action('wp_footer', function() {
-			print_r($widgetInstance);
 			wp_localize_script(
 				'ns_mailchimpwidget',
 				'ns_mailchimpwidget',

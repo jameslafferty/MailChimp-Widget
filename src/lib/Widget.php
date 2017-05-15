@@ -21,7 +21,8 @@ class Widget extends \WP_Widget {
 	function form($instance) {
 		$settings = (object) wp_parse_args($instance, array(
 			'title' => 'Sign Up For Our Mailing List',
-			'mailingList' => ''
+			'mailingList' => '',
+			'displayOptionalFields' => ''
 		));
 		echo "
 		<p>
@@ -43,6 +44,15 @@ class Widget extends \WP_Widget {
 				{$this->get_lists($settings->mailingList)}
 			</select>
 		</p>
+		<p>
+			<input
+				{$settings->displayOptionalFields}
+				class=\"checkbox\"
+				id=\"{$this->get_field_id('displayOptionalFields')}\"
+				name=\"{$this->get_field_name('displayOptionalFields')}\"
+				type=\"checkbox\">
+			<label for=\"{$this->get_field_id('displayOptionalFields')}\">Show optional fields?</label>
+		</p>
 		";
 	}
 
@@ -58,23 +68,23 @@ class Widget extends \WP_Widget {
 		return join('', $options);
 	}
 
-	function render_merge_field($mergeField) {
+	function render_merge_field($mergeField, $displayOptionalFields) {
 		if (!$mergeField->public) {
 			return '';
 		}
-		if (!$mergeField->required) {
+		if (!$mergeField->required && !$displayOptionalFields) {
 			return '';
 		}
 		$mergeFieldRenderers = MergeFieldRenderers::get();
 		if (array_key_exists($mergeField->type, $mergeFieldRenderers)) {
 			return $mergeFieldRenderers[$mergeField->type](
 				$mergeField,
-				$this->render_help_text($mergeField->help_text));
+				MergeFieldRenderers::render_help_text($mergeField->help_text));
 		}
 		return '';
 	}
 
-	function get_list_merge_fields($listId) {
+	function get_list_merge_fields($listId, $displayOptionalFields) {
 		$mergeFields = API::get(sprintf('lists/%s/merge-fields/', $listId));
 		if (count($mergeFields->merge_fields) < $mergeFields->total_items) {
 			$mergeFields = API::get(
@@ -84,10 +94,18 @@ class Widget extends \WP_Widget {
 					$mergeFields->total_items));
 		}
 		return join('', array_map(
-			array($this, 'render_merge_field'), $mergeFields->merge_fields));
+			array($this, 'render_merge_field'), $mergeFields->merge_fields,
+				array_fill(
+					0,
+					count($mergeFields->merge_fields),
+					$displayOptionalFields === 'checked'
+				)
+			)
+		);
 	}
 
 	function update($newInstance, $oldInstance) {
+		$newInstance['displayOptionalFields'] = $newInstance['displayOptionalFields'] ? 'checked' : '';
 		return array_map(function($value) {
 			return sanitize_text_field($value);
 		}, array_merge($oldInstance, $newInstance));
@@ -131,7 +149,7 @@ class Widget extends \WP_Widget {
 			$title,
 			$nonceField,
 			$instance->mailingList,
-			$this->get_list_merge_fields($instance->mailingList),
+			$this->get_list_merge_fields($instance->mailingList, $instance->displayOptionalFields),
 			$args->after_widget);
 	}
 }

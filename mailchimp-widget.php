@@ -37,7 +37,7 @@ try {
 			'ns-mailchimp-widget',
 			null,
 			function() {
-				echo "Enter a valid MailChimp API key here to get started. Once you've done that, you can use the MailChimp Widget from the Widgets menu. You will need to have at least MailChimp list set up before the using the widget.";
+				echo "Enter a valid MailChimp API key here to get started. Once you've done that, you can use the MailChimp Widget from the Widgets menu. You will need to have at least one MailChimp list set up before the using the widget.";
 			},
 			'mailchimp-widget-settings');
 
@@ -50,6 +50,19 @@ try {
 					name="ns-mailchimp-widget[api-key]"
 					type="password"
 					value="%s" />', esc_attr(get_option('ns-mailchimp-widget')['api-key']));
+			},
+			'mailchimp-widget-settings',
+			'ns-mailchimp-widget');
+		
+		add_settings_field(
+			'api-endoint',
+			'MailChimp API Endpoint',
+			function() {
+				printf('<input
+					class="regular-text"
+					name="ns-mailchimp-widget[api-endpoint]"
+					type="text"
+					value="%s" />', esc_attr(get_option('ns-mailchimp-widget')['api-endpoint']));
 			},
 			'mailchimp-widget-settings',
 			'ns-mailchimp-widget');

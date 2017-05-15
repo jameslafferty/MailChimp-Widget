@@ -1,4 +1,7 @@
 (function iife() {
+	if (window.ns_mailchimpwidget === undefined) {
+		return;
+	}
 	window.ns_mailchimpwidget.ids.forEach(function(id) {
 		document.getElementById(id)
 			.querySelector('form')

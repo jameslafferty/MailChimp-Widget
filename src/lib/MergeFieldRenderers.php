@@ -225,7 +225,7 @@ MergeFieldRenderers::$renderers = array(
 				%s
 			</div>',
 			$mergeField->name,
-			MergeFieldRenderers::render_help_text($helpText)
+			MergeFieldRenderers::render_help_text($helpText),
 			$renderRadios(
 				$mergeField->tag,
 				$mergeField->required,

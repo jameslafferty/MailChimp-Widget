@@ -1,41 +1,46 @@
 <?php
 namespace MailChimpWidget;
 
+function get_registered_widgets() {
+	global $wp_registered_widgets;
+	return $wp_registered_widgets;
+}
+
 class WidgetJavaScript {
 
-	public static function init($widgetInstance) {
-		$handler = function() {
+	public static function init() {
+		
+		$handler =  function() {
 			if (wp_verify_nonce(
 				$_REQUEST['ns-mailchimp-signup'], 'ns-mailchimp-signup')) {
 				header("Content-Type: application/json");
-				$response = API::post(sprintf('lists/%s/members/', $_POST['mailingListId']),
-					(object) array(
-					'email_address' => $_POST['email'],
-					'merge_fields' => array_filter($_POST['mergeFields'], function($mergeField) {
-						return !empty($mergeField) && $mergeField !== '';
-					}),
-					'status' => 'pending',
-				));
-				if (isset($response->id) && !empty($response->id)) {
-					exit(json_encode(array(
-						'msg' => 'success!!',
-					)));
-				}
-				exit(json_encode($response));
+				$widget = get_registered_widgets()[$_POST['widgetId']]['callback'][0];
+				exit(json_encode($widget->registerUser($_POST)));
 			}
-			header("Content-Type: application/json");
-			exit(json_encode(
-				array('message' => 'Something is fishy here.')));
 		};
-		add_action('wp_ajax_ns_mailchimpsignup', $handler);
-		add_action('wp_ajax_nopriv_ns_mailchimpsignup', $handler);
-		add_action('wp_footer', function() {
+
+		if (is_user_logged_in()) {
+			add_action('wp_ajax_ns_mailchimpsignup', $handler);
+		} else {
+			add_action('wp_ajax_nopriv_ns_mailchimpsignup', $handler);
+		}
+
+		$widgets = [];
+		add_action('wp_register_sidebar_widget', function($widget) use (&$widgets) {
+			if ($widget['callback'][0] instanceof Widget) {
+				$widgets[] = $widget['callback'][0];
+			}
+		});
+		add_action('wp_footer', function() use (&$widgets) {
+			$widgetIds = array_map(function($item) {
+				return $item->id;
+			}, $widgets);
 			wp_localize_script(
 				'ns_mailchimpwidget',
 				'ns_mailchimpwidget',
 				array(
 					'url' => admin_url('admin-ajax.php'),
-					'ids' => $widgetInstance->widgetIds,
+					'ids' => $widgetIds,
 				));
 		});
 		wp_enqueue_script(

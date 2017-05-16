@@ -48,4 +48,4 @@ class API {
 }
 
 API::$apiKey = get_option('ns-mailchimp-widget')['api-key'];
-API::$apiEndpoint = sprintf('https://%s.api.mailchimp.com/3.0/', split('-', API::$apiKey)[1]);
+API::$apiEndpoint = sprintf(get_option('ns-mailchimp-widget')['api-endpoint'], split('-', API::$apiKey)[1]);

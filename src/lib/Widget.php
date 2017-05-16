@@ -2,7 +2,6 @@
 namespace MailChimpWidget;
 
 class Widget extends \WP_Widget {
-	public $widgetIds = array();
 
 	function __construct() {
 		parent::__construct(
@@ -15,14 +14,15 @@ class Widget extends \WP_Widget {
 				)
 			)
 		);
-		WidgetJavaScript::init($this);
+		WidgetJavaScript::init();
 	}
 
 	function form($instance) {
 		$settings = (object) wp_parse_args($instance, array(
 			'title' => 'Sign Up For Our Mailing List',
 			'mailingList' => '',
-			'displayOptionalFields' => ''
+			'displayOptionalFields' => '',
+			'successMessage' => '',
 		));
 		echo "
 		<p>
@@ -52,6 +52,15 @@ class Widget extends \WP_Widget {
 				name=\"{$this->get_field_name('displayOptionalFields')}\"
 				type=\"checkbox\">
 			<label for=\"{$this->get_field_id('displayOptionalFields')}\">Show optional fields?</label>
+		</p>
+		<p>
+			<label for=\"{$this->get_field_id('successMessage')}\">Success Message:</label>
+			<textarea
+				class=\"widefat\"
+				id=\"{$this->get_field_id('successMessage')}\"
+				name=\"{$this->get_field_name('successMessage')}\"
+				type=\"text\"
+				value=\"{$settings->successMessage}\"></textarea>
 		</p>
 		";
 	}
@@ -112,7 +121,6 @@ class Widget extends \WP_Widget {
 	}
 
 	function widget($args, $instance) {
-		$this->widgetIds[] = $args['widget_id'];
 		$nonceField = wp_nonce_field(
 			'ns-mailchimp-signup', 'ns-mailchimp-signup', true, false);
 		$args = (object) $args;
@@ -123,13 +131,13 @@ class Widget extends \WP_Widget {
 				$instance->title,
 				$args->after_title
 			)) : '';
-		echo sprintf('
+		printf('
 			%s
 			%s
 			<form>
 				%s
 				<input
-					name="mailingListId"
+					name="widgetId"
 					type="hidden"
 					value="%s"/>
 				%s
@@ -148,8 +156,24 @@ class Widget extends \WP_Widget {
 			$args->before_widget,
 			$title,
 			$nonceField,
-			$instance->mailingList,
+			$args->widget_id,
 			$this->get_list_merge_fields($instance->mailingList, $instance->displayOptionalFields),
 			$args->after_widget);
+	}
+
+	function registerUser($post) {
+		$mailingListId = $this->get_settings()[$this->number]['mailingList'];
+		$response = API::post(sprintf('lists/%s/members/', $mailingListId),
+			(object) array(
+			'email_address' => $post['email'],
+			'merge_fields' => array_filter($post['mergeFields'], function($mergeField) {
+				return !empty($mergeField) && $mergeField !== '';
+			}),
+			'status' => 'pending',
+		));
+		if (isset($response->id) && !empty($response->id)) {
+			return array('msg' => 'Successfully signed up.');
+		}
+		return $response;
 	}
 }

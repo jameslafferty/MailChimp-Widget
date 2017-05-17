@@ -30,7 +30,6 @@ MergeFieldRenderers::$renderers = array(
 					<input
 						data-mc-type="address"
 						name="mergeFields[%s][addr2]"
-						%s
 						type="text"
 					/>
 				</label>
@@ -73,7 +72,6 @@ MergeFieldRenderers::$renderers = array(
 			$mergeField->tag,
 			$mergeField->required ? 'required' : '',
 			$mergeField->tag,
-			$mergeField->required ? 'required' : '',
 			$mergeField->tag,
 			$mergeField->required ? 'required' : '',
 			$mergeField->tag,

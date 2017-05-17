@@ -1,15 +1,15 @@
 <?php
 /*
 Plugin Name: MailChimp Widget
-Plugin URI: https://github.com/kalchas
+Plugin URI: https://github.com/jameslafferty/MailChimp-Widget
 Description:
 Author: James Lafferty
-Version: 0.8.12
-Author URI: https://github.com/kalchas
+Version: 1.0.0
+Author URI: https://github.com/jameslafferty
 License: GPL2
 */
 
-/*  Copyright 2010  James Lafferty  (email : james@nearlysensical.com)
+/*  Copyright 2017  James Lafferty  (email : james@nearlysensical.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
@@ -24,7 +24,27 @@ License: GPL2
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+load_plugin_textdomain('ns-mailchimp-widget', plugins_url('language/', __FILE__));
+
 try {
+
+	if (version_compare(PHP_VERSION, '5.6.29') === -1) {
+		throw new Error(
+			__(
+				'Please upgrade to a more recent version of <a href="http://php.net/downloads.php">PHP</a>(at least 5.6.29) to use the MailChimp Widget.',
+				'ns-mailchimp-widget'
+			)
+		);
+	}
+
+	if (!function_exists('curl_init')) {
+		throw new Error(
+			__(
+				'Please install <a href="http://php.net/manual/en/curl.installation.php">PHP with cURL support</a> to use the MailChimp Widget.',
+				'ns-mailchimp-widget'
+			)
+		);
+	}
 
 	require __DIR__ . '/vendor/autoload.php';
 
@@ -37,13 +57,21 @@ try {
 			'ns-mailchimp-widget',
 			null,
 			function() {
-				echo "Enter a valid MailChimp API key here to get started. Once you've done that, you can use the MailChimp Widget from the Widgets menu. You will need to have at least one MailChimp list set up before the using the widget.";
+				printf
+					(__("
+						Enter a valid MailChimp API key here to get started. Once you've done that,
+						you can use the MailChimp Widget from the <a href='%s'>Widgets admin page</a>.
+						You will need to have at least one MailChimp list set up before the using the
+						widget.",
+						'ns-mailchimp-widget'
+					),
+					get_admin_url(null, 'widgets.php'));
 			},
 			'mailchimp-widget-settings');
 
 		add_settings_field(
 			'api-key',
-			'MailChimp API Key',
+			__('MailChimp API Key', 'ns-mailchimp-widget'),
 			function() {
 				printf('<input
 					class="regular-text"
@@ -56,7 +84,7 @@ try {
 		
 		add_settings_field(
 			'api-endoint',
-			'MailChimp API Endpoint',
+			__('MailChimp API Endpoint', 'ns-mailchimp-widget'),
 			function() {
 				printf('<input
 					class="regular-text"
@@ -70,16 +98,18 @@ try {
 
 	add_action('admin_menu', function() {
 		add_options_page(
-			'MailChimp Widget Settings',
-			'MailChimp Widget',
+			__('MailChimp Widget Settings', 'ns-mailchimp-widget'),
+			__('MailChimp Widget', 'ns-mailchimp-widget'),
 			'manage_options',
 			'mailchimp-widget-settings',
 			function() {
-				echo "
+				printf("
 					<div class=\"wrap\">
-						<h2>MailChimp Widget Settings</h2>
+						<h2>%s</h2>
 					</div>
-					<form action=\"options.php\" method=\"post\">";
+					<form action=\"options.php\" method=\"post\">",
+					__('MailChimp Widget Settings', 'ns-mailchimp-widget')
+				);
 				settings_fields('ns-mailchimp-widget');
 				do_settings_sections('mailchimp-widget-settings');
 				submit_button();
@@ -89,12 +119,19 @@ try {
 		);
 	});
 
-	if (function_exists('curl_init')) {
-		add_action('widgets_init', function() {
-			register_widget('MailChimpWidget\\Widget');
-		});
-	}
+	add_action('widgets_init', function() {
+		register_widget('MailChimpWidget\\Widget');
+	});
 
 } catch(Error $e) {
-
+	add_action('admin_notices', function() use ($e) {
+		printf('
+		<div class="notice notice-error">
+			<p>%s</p>
+		</div>
+		',
+		$e->getMessage());
+	});
+} catch(Error $e) {
+	add_action('admin_notices', 'ns_mailchimp_widget_generic_error');
 }

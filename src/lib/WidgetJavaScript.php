@@ -11,8 +11,7 @@ class WidgetJavaScript {
 	public static function init() {
 		
 		$handler =  function() {
-			if (wp_verify_nonce(
-				$_REQUEST['ns-mailchimp-signup'], 'ns-mailchimp-signup')) {
+			if (Widget::verifyNonce()) {
 				header("Content-Type: application/json");
 				$widget = get_registered_widgets()[$_POST['widgetId']]['callback'][0];
 				exit(json_encode($widget->registerUser($_POST)));

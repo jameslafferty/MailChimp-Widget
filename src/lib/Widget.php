@@ -3,6 +3,11 @@ namespace MailChimpWidget;
 
 class Widget extends \WP_Widget {
 
+	public static function verifyNonce() {
+		return wp_verify_nonce(
+				$_REQUEST['ns-mailchimp-signup'], 'ns-mailchimp-signup');
+	}
+
 	function __construct() {
 		parent::__construct(
 			'mailchimp-widget',
@@ -22,7 +27,7 @@ class Widget extends \WP_Widget {
 			'title' => 'Sign Up For Our Mailing List',
 			'mailingList' => '',
 			'displayOptionalFields' => '',
-			'successMessage' => '',
+			'successMessage' => 'You have signed up successfully.',
 		));
 		echo "
 		<p>
@@ -121,20 +126,36 @@ class Widget extends \WP_Widget {
 	}
 
 	function widget($args, $instance) {
-		$nonceField = wp_nonce_field(
-			'ns-mailchimp-signup', 'ns-mailchimp-signup', true, false);
 		$args = (object) $args;
 		$instance = (object) $instance;
 		$title = !empty($instance->title) ?
 			join('', array(
 				$args->before_title,
 				$instance->title,
-				$args->after_title
+				$args->after_title,
 			)) : '';
-		printf('
+		if (self::verifyNonce() &&
+			$_POST['widgetId'] === $this->id) {
+			$registration = $this->registerUser($_POST);
+			if ($registration->success) {
+				return printf('
+					%s
+					%s
+					%s
+					%s
+				',
+				$args->before_widget,
+				$title,
+				esc_html($registration->successMessage),
+				$args->after_widget);
+			}
+		}
+		$nonceField = wp_nonce_field(
+			'ns-mailchimp-signup', 'ns-mailchimp-signup', true, false);
+		return printf('
 			%s
 			%s
-			<form>
+			<form method="post">
 				%s
 				<input
 					name="widgetId"
@@ -162,18 +183,24 @@ class Widget extends \WP_Widget {
 	}
 
 	function registerUser($post) {
-		$mailingListId = $this->get_settings()[$this->number]['mailingList'];
+		$settings = $this->get_settings()[$this->number];
+		$mailingListId = $settings['mailingList'];
+		$mergeFields = is_array($_POST['mergeFields']) ? array_filter($post['mergeFields'], function($mergeField) {
+				return !empty($mergeField) && $mergeField !== '';
+			}) : [];
 		$response = API::post(sprintf('lists/%s/members/', $mailingListId),
 			(object) array(
 			'email_address' => $post['email'],
-			'merge_fields' => array_filter($post['mergeFields'], function($mergeField) {
-				return !empty($mergeField) && $mergeField !== '';
-			}),
+			'merge_fields' => (object) $mergeFields,
 			'status' => 'pending',
 		));
 		if (isset($response->id) && !empty($response->id)) {
-			return array('msg' => 'Successfully signed up.');
+			return (object) array(
+				'success' => true,
+				'successMessage' => $settings['successMessage'],
+			);
 		}
+		$response->success = false;
 		return $response;
 	}
 }

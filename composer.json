@@ -13,5 +13,7 @@
             "MailChimpWidget\\": "src/lib"
         }
     },
-    "require": {}
+    "require": {
+        "php": ">=5.6.29"
+    }
 }

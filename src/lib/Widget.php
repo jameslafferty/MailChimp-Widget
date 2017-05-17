@@ -11,11 +11,11 @@ class Widget extends \WP_Widget {
 	function __construct() {
 		parent::__construct(
 			'mailchimp-widget',
-			esc_html__('MailChimp Widget', 'mailchimp-widget'),
+			esc_html__('MailChimp Widget', 'ns-mailchimp-widget'),
 			array(
 				'description' => esc_html__(
 					'A MailChimp sign up widget.',
-					'mailchimp-widget'
+					'ns-mailchimp-widget'
 				)
 			)
 		);
@@ -24,12 +24,12 @@ class Widget extends \WP_Widget {
 
 	function form($instance) {
 		$settings = (object) wp_parse_args($instance, array(
-			'title' => 'Sign Up For Our Mailing List',
+			'title' => __('Sign Up For Our Mailing List', 'ns-mailchimp-widget'),
 			'mailingList' => '',
 			'displayOptionalFields' => '',
-			'successMessage' => 'You have signed up successfully.',
+			'successMessage' => __('You have signed up successfully.', 'ns-mailchimp-widget'),
 		));
-		echo "
+		printf("
 		<p>
 			<label for=\"{$this->get_field_id('title')}\"></label>
 			<input
@@ -40,7 +40,7 @@ class Widget extends \WP_Widget {
 				value=\"{$settings->title}\" />
 		</p>
 		<p>
-			<label for=\"{$this->get_field_id('mailingList')}\">Select a Mailing List:</label>
+			<label for=\"{$this->get_field_id('mailingList')}\">%s</label>
 			<select
 				class=\"widefat\"
 				id=\"{$this->get_field_id('mailingList')}\"
@@ -56,10 +56,10 @@ class Widget extends \WP_Widget {
 				id=\"{$this->get_field_id('displayOptionalFields')}\"
 				name=\"{$this->get_field_name('displayOptionalFields')}\"
 				type=\"checkbox\">
-			<label for=\"{$this->get_field_id('displayOptionalFields')}\">Show optional fields?</label>
+			<label for=\"{$this->get_field_id('displayOptionalFields')}\">%s</label>
 		</p>
 		<p>
-			<label for=\"{$this->get_field_id('successMessage')}\">Success Message:</label>
+			<label for=\"{$this->get_field_id('successMessage')}\">%s</label>
 			<textarea
 				class=\"widefat\"
 				id=\"{$this->get_field_id('successMessage')}\"
@@ -67,7 +67,10 @@ class Widget extends \WP_Widget {
 				type=\"text\"
 				value=\"{$settings->successMessage}\"></textarea>
 		</p>
-		";
+		", 
+		__('Select a Mailing List:', 'ns-mailchimp-widget'),
+		__('Show optional fields?', 'ns-mailchimp-widget'),
+		__('Success Message:', 'ns-mailchimp-widget'));
 	}
 
 	function get_lists($activeList) {
@@ -82,7 +85,7 @@ class Widget extends \WP_Widget {
 		return join('', $options);
 	}
 
-	function render_merge_field($mergeField, $displayOptionalFields) {
+	function render_merge_field($mergeField, $displayOptionalFields, $errorMessage) {
 		if (!$mergeField->public) {
 			return '';
 		}
@@ -93,12 +96,14 @@ class Widget extends \WP_Widget {
 		if (array_key_exists($mergeField->type, $mergeFieldRenderers)) {
 			return $mergeFieldRenderers[$mergeField->type](
 				$mergeField,
-				MergeFieldRenderers::render_help_text($mergeField->help_text));
+				MergeFieldRenderers::render_help_text($mergeField->help_text),
+				$errorMessage
+			);
 		}
 		return '';
 	}
 
-	function get_list_merge_fields($listId, $displayOptionalFields) {
+	function get_list_merge_fields($listId, $displayOptionalFields, $errors) {
 		$mergeFields = API::get(sprintf('lists/%s/merge-fields/', $listId));
 		if (count($mergeFields->merge_fields) < $mergeFields->total_items) {
 			$mergeFields = API::get(
@@ -113,7 +118,13 @@ class Widget extends \WP_Widget {
 					0,
 					count($mergeFields->merge_fields),
 					$displayOptionalFields === 'checked'
-				)
+				),
+				array_map(function($mergeField) use ($errors) {
+					if (array_key_exists($mergeField->tag, $errors)) {
+						return $errors[$mergeField->tag];
+					}
+					return '';
+				}, $mergeFields->merge_fields)
 			)
 		);
 	}
@@ -128,6 +139,7 @@ class Widget extends \WP_Widget {
 	function widget($args, $instance) {
 		$args = (object) $args;
 		$instance = (object) $instance;
+		$errors = (object) array();
 		$title = !empty($instance->title) ?
 			join('', array(
 				$args->before_title,
@@ -149,6 +161,7 @@ class Widget extends \WP_Widget {
 				esc_html($registration->successMessage),
 				$args->after_widget);
 			}
+			$errors = $registration->errors;
 		}
 		$nonceField = wp_nonce_field(
 			'ns-mailchimp-signup', 'ns-mailchimp-signup', true, false);
@@ -178,8 +191,17 @@ class Widget extends \WP_Widget {
 			$title,
 			$nonceField,
 			$args->widget_id,
-			$this->get_list_merge_fields($instance->mailingList, $instance->displayOptionalFields),
+			$this->get_list_merge_fields($instance->mailingList, $instance->displayOptionalFields, $errors),
 			$args->after_widget);
+	}
+
+	function parseErrors($response) {
+		if (is_array($response->errors)) {
+			array_walk($response->errors, function($error) use (&$errors) {
+				$errors[$error->field] = $error->message;
+			});
+		}
+		return $errors;
 	}
 
 	function registerUser($post) {
@@ -201,6 +223,9 @@ class Widget extends \WP_Widget {
 			);
 		}
 		$response->success = false;
-		return $response;
+		return (object) array(
+			'success' => false,
+			'errors' => $this->parseErrors($response),
+		);
 	}
 }

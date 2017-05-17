@@ -4,7 +4,7 @@ Tags: newsletter, MailChimp, mailing list, widget, email marketing
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JSL4JTA4KMZLG
 Requires at least: 4.7.5
 Tested up to: 4.7.5
-Stable tag: trunk
+Stable tag: 0.8.12
 
 Adds a widget that allows your users to sign up for your MailChimp mailing list.
 

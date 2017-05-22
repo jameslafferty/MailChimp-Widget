@@ -2,10 +2,107 @@
 namespace MailChimpWidget;
 
 class Widget extends \WP_Widget {
+	public static $registration = [];
+
+	public static function parseErrors($response) {
+		if (is_array($response->errors)) {
+			array_walk($response->errors, function($error) use (&$errors) {
+				$errors[$error->field] = $error->message;
+			});
+		} else {
+			$errors = array();
+			if ($response->title === 'Member Exists') {
+				$errors['email_address'] = __("You've already signed up for this list", NS_MAILCHIMP_WIDGET);
+			}
+		}
+		return $errors;
+	}
+
+	public static function registerUser($post, $widgetId, $successMessage, $mailingListId) {
+		$mergeFields = is_array($post['mergeFields']) ? array_filter($post['mergeFields'], function($mergeField) {
+				return !empty($mergeField) && $mergeField !== '';
+			}) : [];
+
+		$response = API::post(sprintf('lists/%s/members/', $mailingListId),
+			(object) array(
+			'email_address' => $post['email'],
+			'merge_fields' => (object) $mergeFields,
+			'status' => 'pending',
+		));
+
+		if (isset($response->id) && !empty($response->id)) {
+			setcookie(
+				sprintf('ns-mailchimp-widget[%s]', $widgetId),
+				'registered');
+			Widget::$registration[$widgetId] =(object) array(
+				'success' => true,
+				'successMessage' => $settings['successMessage'],
+			);
+		} else {
+			Widget::$registration[$widgetId] = (object) array(
+				'success' => false,
+				'errors' => self::parseErrors($response),
+			);
+		}
+		return Widget::$registration[$widgetId];
+	}
 
 	public static function verifyNonce() {
 		return wp_verify_nonce(
-				$_REQUEST['ns-mailchimp-signup'], 'ns-mailchimp-signup');
+			$_REQUEST['ns-mailchimp-signup'], 'ns-mailchimp-signup');
+	}
+
+	public static function render_merge_field($mergeField, $errorMessage) {
+		if (!$mergeField->public) {
+			return '';
+		}
+		$mergeFieldRenderers = MergeFieldRenderers::get();
+		if (array_key_exists($mergeField->type, $mergeFieldRenderers)) {
+			return $mergeFieldRenderers[$mergeField->type](
+				$mergeField,
+				MergeFieldRenderers::render_help_text($mergeField->help_text),
+				$errorMessage
+			);
+		}
+		return '';
+	}
+
+	public static function get_list_merge_fields($listId, $displayOptionalFields, array $errors, $emailLast) {
+		$mergeFields = API::get(sprintf('lists/%s/merge-fields/?count=-1&required=%s',
+			$listId,
+			$displayOptionalFields ? 'false' : 'true'));
+
+		if (count($mergeFields->merge_fields) < $mergeFields->total_items) {
+			$mergeFields = API::get(
+				sprintf(
+					'lists/%s/merge-fields/?count=%s&required=%s',
+					$listId,
+					$mergeFields->total_items,
+					$displayOptionalFields ? 'false' : 'true'));
+		}
+
+		$primaryEmail = (object) array(
+			'public' => true,
+			'required' => true,
+			'tag' => 'email_address',
+			'type' => 'primary_email',
+		);
+
+		if ($emailLast) {
+			array_push($mergeFields->merge_fields, $primaryEmail);
+		} else {
+			array_unshift($mergeFields->merge_fields, $primaryEmail);
+		}
+		return join('', array_map(
+			[__CLASS__, 'render_merge_field'], $mergeFields->merge_fields,
+				array_map(function($mergeField) use (&$errors) {
+					if (array_key_exists($mergeField->tag, $errors)) {
+						return $errors[$mergeField->tag];
+					}
+					return '';
+				}, $mergeFields->merge_fields)
+			)
+		);
 	}
 
 	function __construct() {
@@ -22,11 +119,31 @@ class Widget extends \WP_Widget {
 		WidgetJavaScript::init();
 	}
 
+	public function _register_one($number) {
+		add_action('init', $this->process_request());
+		return parent::_register_one($number);
+	}
+
+	public function process_request() {
+		$number = "{$this->number}";
+		$settings = (object) $this->get_settings()[$this->number];
+		$mailingListId = $settings->mailingList;
+		$successMessage = $settings->successMessage;
+		return function() use ($number, $successMessage, $mailingListId) {
+			if (Widget::verifyNonce() &&
+				$_POST['mailChimpWidgetNumber'] === $number) {
+				Widget::registerUser($_POST, $number, $successMessage, $mailingListId);
+			}
+		};
+	}
+
 	function form($instance) {
 		$settings = (object) wp_parse_args($instance, array(
 			'title' => __('Sign Up For Our Mailing List', NS_MAILCHIMP_WIDGET),
 			'mailingList' => '',
+			'hideOnSuccess' => 'checked',
 			'displayOptionalFields' => '',
+			'emailLast' => '',
 			'successMessage' => __('You have signed up successfully.', NS_MAILCHIMP_WIDGET),
 			'signUpButtonText' => __('Sign Up!', NS_MAILCHIMP_WIDGET),
 		));
@@ -52,12 +169,30 @@ class Widget extends \WP_Widget {
 		</p>
 		<p>
 			<input
+				{$settings->hideOnSuccess}
+				class=\"checkbox\"
+				id=\"{$this->get_field_id('hideOnSuccess')}\"
+				name=\"{$this->get_field_name('hideOnSuccess')}\"
+				type=\"checkbox\">
+			<label for=\"{$this->get_field_id('hideOnSuccess')}\">%s</label>
+		</p>
+		<p>
+			<input
 				{$settings->displayOptionalFields}
 				class=\"checkbox\"
 				id=\"{$this->get_field_id('displayOptionalFields')}\"
 				name=\"{$this->get_field_name('displayOptionalFields')}\"
 				type=\"checkbox\">
 			<label for=\"{$this->get_field_id('displayOptionalFields')}\">%s</label>
+		</p>
+		<p>
+			<input
+				{$settings->emailLast}
+				class=\"checkbox\"
+				id=\"{$this->get_field_id('emailLast')}\"
+				name=\"{$this->get_field_name('emailLast')}\"
+				type=\"checkbox\">
+			<label for=\"{$this->get_field_id('emailLast')}\">%s</label>
 		</p>
 		<p>
 			<label for=\"{$this->get_field_id('successMessage')}\">%s</label>
@@ -78,7 +213,9 @@ class Widget extends \WP_Widget {
 		",
 		__('Title:', NS_MAILCHIMP_WIDGET),
 		__('Select a Mailing List:', NS_MAILCHIMP_WIDGET),
+		__('Hide widget after successful sign up?', NS_MAILCHIMP_WIDGET),
 		__('Show optional fields?', NS_MAILCHIMP_WIDGET),
+		__('Show email field last?', NS_MAILCHIMP_WIDGET),
 		__('Success Message:', NS_MAILCHIMP_WIDGET),
 		__('Sign Up Button Text:', NS_MAILCHIMP_WIDGET));
 	}
@@ -95,52 +232,10 @@ class Widget extends \WP_Widget {
 		return join('', $options);
 	}
 
-	function render_merge_field($mergeField, $displayOptionalFields, $errorMessage) {
-		if (!$mergeField->public) {
-			return '';
-		}
-		if (!$mergeField->required && !$displayOptionalFields) {
-			return '';
-		}
-		$mergeFieldRenderers = MergeFieldRenderers::get();
-		if (array_key_exists($mergeField->type, $mergeFieldRenderers)) {
-			return $mergeFieldRenderers[$mergeField->type](
-				$mergeField,
-				MergeFieldRenderers::render_help_text($mergeField->help_text),
-				$errorMessage
-			);
-		}
-		return '';
-	}
-
-	function get_list_merge_fields($listId, $displayOptionalFields, array $errors) {
-		$mergeFields = API::get(sprintf('lists/%s/merge-fields/', $listId));
-		if (count($mergeFields->merge_fields) < $mergeFields->total_items) {
-			$mergeFields = API::get(
-				sprintf(
-					'lists/%s/merge-fields/?count=%s',
-					$listId,
-					$mergeFields->total_items));
-		}
-		return join('', array_map(
-			array($this, 'render_merge_field'), $mergeFields->merge_fields,
-				array_fill(
-					0,
-					count($mergeFields->merge_fields),
-					$displayOptionalFields === 'checked'
-				),
-				array_map(function($mergeField) use (&$errors) {
-					if (array_key_exists($mergeField->tag, $errors)) {
-						return $errors[$mergeField->tag];
-					}
-					return '';
-				}, $mergeFields->merge_fields)
-			)
-		);
-	}
-
 	function update($newInstance, $oldInstance) {
+		$newInstance['hideOnSuccess'] = $newInstance['hideOnSuccess'] ? 'checked' : '';
 		$newInstance['displayOptionalFields'] = $newInstance['displayOptionalFields'] ? 'checked' : '';
+		$newInstance['emailLast'] = $newInstance['emailLast'] ? 'checked' : '';
 		return array_map(function($value) {
 			return sanitize_text_field($value);
 		}, array_merge($oldInstance, $newInstance));
@@ -155,24 +250,20 @@ class Widget extends \WP_Widget {
 				$instance->title,
 				$args->after_title,
 			)) : '';
-		$errors = array();
-		if (self::verifyNonce() &&
-			$_POST['widgetId'] === $this->id) {
-			$registration = $this->registerUser($_POST);
-			if ($registration->success) {
-				return printf('
-					%s
-					%s
-					%s
-					%s
-				',
-				$args->before_widget,
-				$title,
-				esc_html($registration->successMessage),
-				$args->after_widget);
-			}
-			$errors = $registration->errors;
+		$this->registration = Widget::$registration[$this->number];
+		if ($this->registration->success) {
+			return printf('
+				%s
+				%s
+				%s
+				%s
+			',
+			$args->before_widget,
+			$title,
+			esc_html($registration->successMessage),
+			$args->after_widget);
 		}
+
 		$nonceField = wp_nonce_field(
 			'ns-mailchimp-signup', 'ns-mailchimp-signup', true, false);
 		return printf('
@@ -181,18 +272,10 @@ class Widget extends \WP_Widget {
 			<form method="post">
 				%s
 				<input
-					name="widgetId"
+					name="mailChimpWidgetNumber"
 					type="hidden"
 					value="%s"/>
 				%s
-				<label>
-					<span>%s</span>
-					<input
-						name="email"
-						required
-						type="email" />
-						%s
-				</label>
 				<button type="submit">
 					<span>%s</span>
 				</button>
@@ -201,52 +284,13 @@ class Widget extends \WP_Widget {
 			$args->before_widget,
 			$title,
 			$nonceField,
-			$args->widget_id,
-			$this->get_list_merge_fields($instance->mailingList, $instance->displayOptionalFields, $errors),
-			__('Email Address', NS_MAILCHIMP_WIDGET),
-			MergeFieldRenderers::render_error_message($errors['email_address']),
+			$this->number,
+			Widget::get_list_merge_fields(
+				$instance->mailingList,
+				$instance->displayOptionalFields,
+				$this->registration ? $this->registration->errors : [],
+				$instance->emailLast),
 			$instance->signUpButtonText,
 			$args->after_widget);
-	}
-
-	function parseErrors($response) {
-		if (is_array($response->errors)) {
-			array_walk($response->errors, function($error) use (&$errors) {
-				$errors[$error->field] = $error->message;
-			});
-		} else {
-			$errors = array();
-			if ($response->title === 'Member Exists') {
-				$errors['email_address'] = __("You've already signed up for this list", NS_MAILCHIMP_WIDGET);
-			}
-		}
-		return $errors;
-	}
-
-	function registerUser($post) {
-		$settings = $this->get_settings()[$this->number];
-		$mailingListId = $settings['mailingList'];
-		$mergeFields = is_array($_POST['mergeFields']) ? array_filter($post['mergeFields'], function($mergeField) {
-				return !empty($mergeField) && $mergeField !== '';
-			}) : [];
-
-		$response = API::post(sprintf('lists/%s/members/', $mailingListId),
-			(object) array(
-			'email_address' => $post['email'],
-			'merge_fields' => (object) $mergeFields,
-			'status' => 'pending',
-		));
-
-		if (isset($response->id) && !empty($response->id)) {
-			return (object) array(
-				'success' => true,
-				'successMessage' => $settings['successMessage'],
-			);
-		}
-
-		return (object) array(
-			'success' => false,
-			'errors' => $this->parseErrors($response),
-		);
 	}
 }

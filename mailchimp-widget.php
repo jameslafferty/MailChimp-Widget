@@ -60,81 +60,23 @@ try {
 
 	require __DIR__ . '/vendor/autoload.php';
 
-	add_action('admin_init', function() {
-		register_setting(
-			NS_MAILCHIMP_WIDGET,
-			NS_MAILCHIMP_WIDGET);
-
-		add_settings_section(
-			NS_MAILCHIMP_WIDGET,
-			null,
-			function() {
-				printf
-					(__("
-						Enter a valid MailChimp API key here to get started. Once you've done that,
-						you can use the MailChimp Widget from the <a href='%s'>Widgets admin page</a>.
-						You will need to have at least one MailChimp list set up before the using the
-						widget.",
-						NS_MAILCHIMP_WIDGET
-					),
-					get_admin_url(null, 'widgets.php'));
-			},
-			'mailchimp-widget-settings');
-
-		add_settings_field(
-			'api-key',
-			__('MailChimp API Key', NS_MAILCHIMP_WIDGET),
-			function() {
-				printf('<input
-					class="regular-text"
-					name="ns-mailchimp-widget[api-key]"
-					type="password"
-					value="%s" />', esc_attr(get_option(NS_MAILCHIMP_WIDGET)['api-key']));
-			},
-			'mailchimp-widget-settings',
-			NS_MAILCHIMP_WIDGET);
-		
-		add_settings_field(
-			'api-endoint',
-			__('MailChimp API Endpoint', NS_MAILCHIMP_WIDGET),
-			function() {
-				printf('<input
-					class="regular-text"
-					name="ns-mailchimp-widget[api-endpoint]"
-					type="text"
-					value="%s" />', esc_attr(get_option(NS_MAILCHIMP_WIDGET)['api-endpoint']));
-			},
-			'mailchimp-widget-settings',
-			NS_MAILCHIMP_WIDGET);
-	});
-
-	add_action('admin_menu', function() {
-		add_options_page(
-			__('MailChimp Widget Settings', NS_MAILCHIMP_WIDGET),
-			__('MailChimp Widget', NS_MAILCHIMP_WIDGET),
-			'manage_options',
-			'mailchimp-widget-settings',
-			function() {
-				printf("
-					<div class=\"wrap\">
-						<h2>%s</h2>
-					</div>
-					<form action=\"options.php\" method=\"post\">",
-					__('MailChimp Widget Settings', NS_MAILCHIMP_WIDGET)
-				);
-				settings_fields(NS_MAILCHIMP_WIDGET);
-				do_settings_sections('mailchimp-widget-settings');
-				submit_button();
-				echo "
-					</form>";
-			}
-		);
-	});
+	MailChimpWidget\Settings::init();
 
 	$options = get_option(NS_MAILCHIMP_WIDGET);
-	if (!empty($options['api-key']) && !empty($options['api-endpoint'])) {
+	if (!empty($options['api-key'])) {
 		add_action('widgets_init', function() {
-			register_widget('MailChimpWidget\\Widget');
+			register_widget(new MailChimpWidget\Widget);
+		});
+	} else {
+		add_action('admin_notices', function() {
+			printf('
+			<div class="notice notice-warning is-dismissible">
+				<p>%s</p>
+			</div>',
+			sprintf(
+				__("You'll need to set up the MailChimp Widget plugin settings before using it.
+				You can do that <a href='%s'>here</a>.", NS_MAILCHIMP),
+				admin_url('/options-general.php?page=mailchimp-widget-settings')));
 		});
 	}
 

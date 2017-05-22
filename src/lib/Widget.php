@@ -12,7 +12,7 @@ class Widget extends \WP_Widget {
 		} else {
 			$errors = array();
 			if ($response->title === 'Member Exists') {
-				$errors['email_address'] = __("You've already signed up for this list", NS_MAILCHIMP_WIDGET);
+				$errors['email_address'] = __("You've already signed up for this list", 'ns-mailchimp-widget');
 			}
 		}
 		return $errors;
@@ -108,11 +108,11 @@ class Widget extends \WP_Widget {
 	function __construct() {
 		parent::__construct(
 			'mailchimp-widget',
-			esc_html__('MailChimp Widget', NS_MAILCHIMP_WIDGET),
+			esc_html__('MailChimp Widget', 'ns-mailchimp-widget'),
 			array(
 				'description' => esc_html__(
 					'A MailChimp sign up widget.',
-					NS_MAILCHIMP_WIDGET
+					'ns-mailchimp-widget'
 				),
 			)
 		);
@@ -139,13 +139,13 @@ class Widget extends \WP_Widget {
 
 	function form($instance) {
 		$settings = (object) wp_parse_args($instance, array(
-			'title' => __('Sign Up For Our Mailing List', NS_MAILCHIMP_WIDGET),
+			'title' => __('Sign Up For Our Mailing List', 'ns-mailchimp-widget'),
 			'mailingList' => '',
 			'hideOnSuccess' => 'checked',
 			'displayOptionalFields' => '',
 			'emailLast' => '',
-			'successMessage' => __('You have signed up successfully.', NS_MAILCHIMP_WIDGET),
-			'signUpButtonText' => __('Sign Up!', NS_MAILCHIMP_WIDGET),
+			'successMessage' => __('You have signed up successfully.', 'ns-mailchimp-widget'),
+			'signUpButtonText' => __('Sign Up!', 'ns-mailchimp-widget'),
 		));
 		printf("
 		<p>
@@ -211,13 +211,13 @@ class Widget extends \WP_Widget {
 				value=\"{$settings->signUpButtonText}\" />
 		</p>
 		",
-		__('Title:', NS_MAILCHIMP_WIDGET),
-		__('Select a Mailing List:', NS_MAILCHIMP_WIDGET),
-		__('Hide widget after successful sign up?', NS_MAILCHIMP_WIDGET),
-		__('Show optional fields?', NS_MAILCHIMP_WIDGET),
-		__('Show email field last?', NS_MAILCHIMP_WIDGET),
-		__('Success Message:', NS_MAILCHIMP_WIDGET),
-		__('Sign Up Button Text:', NS_MAILCHIMP_WIDGET));
+		__('Title:', 'ns-mailchimp-widget'),
+		__('Select a Mailing List:', 'ns-mailchimp-widget'),
+		__('Hide widget after successful sign up?', 'ns-mailchimp-widget'),
+		__('Show optional fields?', 'ns-mailchimp-widget'),
+		__('Show email field last?', 'ns-mailchimp-widget'),
+		__('Success Message:', 'ns-mailchimp-widget'),
+		__('Sign Up Button Text:', 'ns-mailchimp-widget'));
 	}
 
 	function get_lists($activeList) {

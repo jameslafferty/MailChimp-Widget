@@ -4,6 +4,7 @@ Plugin Name: MailChimp Widget
 Plugin URI: https://github.com/jameslafferty/MailChimp-Widget
 Description:
 Author: James Lafferty
+Text Domain: ns-mailchimp-widget
 Version: 1.0.0
 Author URI: https://github.com/jameslafferty
 License: GPL2
@@ -30,13 +31,11 @@ function ns_mailchimp_widget_generic_error() {
 		<div class="notice notice-error">
 			<p>%s</p>
 		</div>',
-		__('There was an issue with the MailChimp Widget.', NS_MAILCHIMP_WIDGET)
+		__('There was an issue with the MailChimp Widget.', 'ns-mailchimp-widget')
 	);
 }
 
-require __DIR__ . '/constants.php';
-
-load_plugin_textdomain(NS_MAILCHIMP_WIDGET, plugins_url('language/', __FILE__));
+load_plugin_textdomain('ns-mailchimp-widget', plugins_url('language/', __FILE__));
 
 try {
 
@@ -44,7 +43,7 @@ try {
 		throw new Error(
 			__(
 				'Please upgrade to a more recent version of <a href="http://php.net/downloads.php">PHP</a>(at least 5.6.29) to use the MailChimp Widget.',
-				NS_MAILCHIMP_WIDGET
+				'ns-mailchimp-widget'
 			)
 		);
 	}
@@ -53,7 +52,7 @@ try {
 		throw new Error(
 			__(
 				'Please install <a href="http://php.net/manual/en/curl.installation.php">PHP with cURL support</a> to use the MailChimp Widget.',
-				NS_MAILCHIMP_WIDGET
+				'ns-mailchimp-widget'
 			)
 		);
 	}
@@ -62,7 +61,7 @@ try {
 
 	MailChimpWidget\Settings::init();
 
-	$options = get_option(NS_MAILCHIMP_WIDGET);
+	$options = get_option('ns-mailchimp-widget');
 	if (!empty($options['api-key'])) {
 		add_action('widgets_init', function() {
 			register_widget(new MailChimpWidget\Widget);

@@ -5,7 +5,7 @@ class Widget extends \WP_Widget {
 	public static $registration = [];
 
 	public static function parseErrors($response) {
-		if (is_array($response->errors)) {
+		if (is_array($response->errors) && count($response->errors) > 0) {
 			array_walk($response->errors, function($error) use (&$errors) {
 				$errors[$error->field] = $error->message;
 			});
@@ -33,15 +33,18 @@ class Widget extends \WP_Widget {
 		if (isset($response->id) && !empty($response->id)) {
 			setcookie(
 				sprintf('ns-mailchimp-widget[%s]', $widgetId),
-				'registered');
+				'registered',
+				strtotime('+10 years'),
+				'/');
 			Widget::$registration[$widgetId] =(object) array(
 				'success' => true,
-				'successMessage' => $settings['successMessage'],
+				'successMessage' => $successMessage,
 			);
 		} else {
+			$errors = Widget::parseErrors($response);
 			Widget::$registration[$widgetId] = (object) array(
 				'success' => false,
-				'errors' => self::parseErrors($response),
+				'errors' => $errors,
 			);
 		}
 		return Widget::$registration[$widgetId];
@@ -120,7 +123,7 @@ class Widget extends \WP_Widget {
 	}
 
 	public function _register_one($number) {
-		add_action('init', $this->process_request());
+		add_action('parse_request', $this->process_request());
 		return parent::_register_one($number);
 	}
 
@@ -244,6 +247,10 @@ class Widget extends \WP_Widget {
 	function widget($args, $instance) {
 		$args = (object) $args;
 		$instance = (object) $instance;
+		if ($instance->hideOnSuccess &&
+			$_COOKIE['ns-mailchimp-widget'][$this->number]) {
+			return $this;
+		}
 		$title = !empty($instance->title) ?
 			join('', array(
 				$args->before_title,
@@ -269,7 +276,9 @@ class Widget extends \WP_Widget {
 		return printf('
 			%s
 			%s
-			<form method="post">
+			<form
+				action="#%s"
+				method="post">
 				%s
 				<input
 					name="mailChimpWidgetNumber"
@@ -283,6 +292,7 @@ class Widget extends \WP_Widget {
 			%s',
 			$args->before_widget,
 			$title,
+			$this->id,
 			$nonceField,
 			$this->number,
 			Widget::get_list_merge_fields(

@@ -9,12 +9,16 @@ function get_registered_widgets() {
 class WidgetJavaScript {
 
 	public static function init() {
-		
 		$handler =  function() {
 			if (Widget::verifyNonce()) {
 				header("Content-Type: application/json");
-				$widget = get_registered_widgets()[$_POST['widgetId']]['callback'][0];
-				exit(json_encode($widget->registerUser($_POST)));
+				$settings = (object)(new Widget())->get_settings()[$_POST['mailChimpWidgetNumber']];
+				exit(json_encode(
+					Widget::registerUser(
+						$_POST,
+						$_POST['mailChimpWidgetNumber'],
+						$settings->successMessage,
+						$settings->mailingList)));
 			}
 		};
 
@@ -24,16 +28,13 @@ class WidgetJavaScript {
 			add_action('wp_ajax_nopriv_ns_mailchimpsignup', $handler);
 		}
 
-		$widgets = [];
-		add_action('wp_register_sidebar_widget', function($widget) use (&$widgets) {
+		$widgetIds = [];
+		add_action('wp_register_sidebar_widget', function($widget) use (&$widgetIds) {
 			if ($widget['callback'][0] instanceof Widget) {
-				$widgets[] = $widget['callback'][0];
+				$widgetIds[] = $widget['callback'][0]->id;
 			}
 		});
-		add_action('wp_footer', function() use (&$widgets) {
-			$widgetIds = array_map(function($item) {
-				return $item->id;
-			}, $widgets);
+		add_action('wp_footer', function() use (&$widgetIds) {
 			wp_localize_script(
 				'ns_mailchimpwidget',
 				'ns_mailchimpwidget',

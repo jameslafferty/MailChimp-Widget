@@ -5,9 +5,11 @@ Plugin URI: https://github.com/jameslafferty/MailChimp-Widget
 Description:
 Author: James Lafferty
 Text Domain: ns-mailchimp-widget
+Domain Path: /languages
 Version: 1.0.0
 Author URI: https://github.com/jameslafferty
 License: GPL2
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
 
 /*  Copyright 2017  James Lafferty  (email : james@nearlysensical.com)
@@ -25,6 +27,8 @@ License: GPL2
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 function ns_mailchimp_widget_generic_error() {
 	printf('

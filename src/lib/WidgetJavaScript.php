@@ -1,5 +1,6 @@
 <?php
 namespace MailChimpWidget;
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 function get_registered_widgets() {
 	global $wp_registered_widgets;

@@ -1,5 +1,6 @@
 <?php
 namespace MailChimpWidget;
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 class Widget extends \WP_Widget {
 	public static $registration = [];

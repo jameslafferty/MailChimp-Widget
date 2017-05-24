@@ -38,6 +38,20 @@ class Settings {
                 'mailchimp-widget-settings',
                 'ns-mailchimp-widget');
 
+            add_settings_field(
+                'styles',
+                __('Widget Styles', 'ns-mailchimp-widget'),
+                function() {
+                    printf('<textarea
+                        class="large-text code"
+                        cols="50"
+                        name="ns-mailchimp-widget[styles]"
+                        rows="10"
+                        value="%s"></textarea>', esc_attr(get_option('ns-mailchimp-widget')['styles']));
+                },
+                'mailchimp-widget-settings',
+                'ns-mailchimp-widget');
+
         });
 
         add_action('admin_menu', function() {

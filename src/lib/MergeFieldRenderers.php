@@ -8,8 +8,12 @@ class MergeFieldRenderers {
 		return self::$renderers;
 	}
 
-	public static function render_error_message($errorMessage) {
-		return !empty($errorMessage) ? sprintf('<span class="error">%s</span>', $errorMessage) : '';
+	public static function render_error_message($errorMessage, $tag) {
+		return sprintf('<span
+			data-ns-mailchimp-widget-error-%s
+			class="error">%s</span>',
+			$tag,
+			$errorMessage);
 	}
 
 	public static function render_help_text($helpText) {
@@ -19,7 +23,8 @@ class MergeFieldRenderers {
 	public static function render_input_field(
 		$name, $tag, $required, $type, $errorMessage, $helpText) {
 		return sprintf('
-			<label>
+			<label
+				data-ns-mailchimp-widget-field="%s">
 				<span class="name">%s</span>
 				<input
 					name="%s"
@@ -29,11 +34,12 @@ class MergeFieldRenderers {
 				%s
 				%s
 			</label>',
+			$tag,
 			$name,
 			$tag,
 			$required ? 'required' : '',
 			$type,
-			MergeFieldRenderers::render_error_message($errorMessage),
+			MergeFieldRenderers::render_error_message($errorMessage, $tag),
 			MergeFieldRenderers::render_help_text($helpText));
 	}
 }
@@ -45,12 +51,13 @@ MergeFieldRenderers::$renderers = array(
 			'email',
 			true,
 			'email',
-			MergeFieldRenderers::render_error_message($errorMessage),
-			MergeFieldRenderers::render_help_text($helpText));
+			$errorMessage,
+			$helpText);
 	},
 	'address' => function($mergeField, $helpText, $errorMessage='') {
 		return sprintf('
-			<div>
+			<div
+				data-ns-mailchimp-widget-field="%s">
 				<span class="name">%s</span>
 				%s
 				%s
@@ -59,53 +66,46 @@ MergeFieldRenderers::$renderers = array(
 					<input
 						name="mergeFields[%s][addr1]"
 						%s
-						type="text"
-					/>
+						type="text" />
 				</label>
 				<label>
 					<span class="name">%s</span>
 					<input
-						data-mc-type="address"
 						name="mergeFields[%s][addr2]"
-						type="text"
-					/>
+						type="text" />
 				</label>
 				<label>
 					<span class="name">%s</span>
 					<input
-						data-mc-type="address"
 						name="mergeFields[%s][city]"
 						%s
-						type="text"
-					/>
+						type="text" />
 				</label>
 				<label>
 					<span class="name">%s</span>
 					<input
 						name="mergeFields[%s][state]"
 						%s
-						type="text"
-					/>
+						type="text"/>
 				</label>
 				<label>
 					<span class="name">%s</span>
 					<input
 						name="mergeFields[%s][zip]"
 						%s
-						type="text"
-					/>
+						type="text" />
 				</label>
 				<label>
 					<span class="name">%s</span>
 					<input
 						name="mergeFields[%s][country]"
 						%s
-						type="text"
-					/>
+						type="text" />
 				</label>
 			</div>',
+			$mergeField->tag,
 			$mergeField->name,
-			MergeFieldRenderers::render_error_message($errorMessage),
+			MergeFieldRenderers::render_error_message($errorMessage, $mergeField->tag),
 			MergeFieldRenderers::render_help_text($helpText),
 			__('Address Line 1', 'ns-mailchimp-widget'),
 			$mergeField->tag,
@@ -125,24 +125,6 @@ MergeFieldRenderers::$renderers = array(
 			$mergeField->tag,
 			$mergeField->required ? 'required' : '');
 	},
-	'birthday' => function($mergeField, $helpText, $errorMessage='') {
-		return MergeFieldRenderers::render_input_field(
-			$mergeField->name,
-			"mergeFields[{$mergeField->tag}]",
-			$mergeField->required,
-			'date',
-			MergeFieldRenderers::render_error_message($errorMessage),
-			MergeFieldRenderers::render_help_text($helpText));
-	},
-	'date' => function($mergeField, $helpText, $errorMessage='') {
-		return MergeFieldRenderers::render_input_field(
-			$mergeField->name,
-			"mergeFields[{$mergeField->tag}]",
-			$mergeField->required,
-			'date',
-			MergeFieldRenderers::render_error_message($errorMessage),
-			MergeFieldRenderers::render_help_text($helpText));
-	},
 	'dropdown' => function($mergeField, $helpText, $errorMessage='') {
 		$renderOptions = function($choices) {
 			return join('', array_map(function($choice) {
@@ -150,7 +132,8 @@ MergeFieldRenderers::$renderers = array(
 			}, $choices));
 		};
 		return sprintf('
-			<label>
+			<label
+				data-ns-mailchimp-widget-field="%s">
 				<span class="name">%s</span>
 				<select
 					name="mergeFields[%s]"
@@ -159,50 +142,15 @@ MergeFieldRenderers::$renderers = array(
 				%s
 				%s
 			</label>',
+			$mergeField->tag,
 			$mergeField->name,
 			$mergeField->tag,
 			$mergeField->required ? 'required' : '',
 			$renderOptions($mergeField->options->choices),
-			MergeFieldRenderers::render_error_message($errorMessage),
+			MergeFieldRenderers::render_error_message($errorMessage, $mergeField->tag),
 			MergeFieldRenderers::render_help_text($helpText));
 	},
-	'email' => function($mergeField, $helpText, $errorMessage='') {
-		return MergeFieldRenderers::render_input_field(
-			$mergeField->name,
-			"mergeFields[{$mergeField->tag}]",
-			$mergeField->required,
-			'email',
-			MergeFieldRenderers::render_error_message($errorMessage),
-			MergeFieldRenderers::render_help_text($helpText));
-	},
-	'imageurl' => function($mergeField, $helpText, $errorMessage='') {
-		return MergeFieldRenderers::render_input_field(
-			$mergeField->name,
-			"mergeFields[{$mergeField->tag}]",
-			$mergeField->required,
-			'url',
-			MergeFieldRenderers::render_error_message($errorMessage),
-			MergeFieldRenderers::render_help_text($helpText));
-	},
-	'number' => function($mergeField, $helpText) {
-		return MergeFieldRenderers::render_input_field(
-			$mergeField->name,
-			"mergeFields[{$mergeField->tag}]",
-			$mergeField->required,
-			'number',
-			MergeFieldRenderers::render_error_message($errorMessage),
-			MergeFieldRenderers::render_help_text($helpText));
-	},
-	'phone' => function($mergeField, $helpText) {
-		return MergeFieldRenderers::render_input_field(
-			$mergeField->name,
-			"mergeFields[{$mergeField->tag}]",
-			$mergeField->required,
-			'tel',
-			MergeFieldRenderers::render_error_message($errorMessage),
-			MergeFieldRenderers::render_help_text($helpText));
-	},
-	'radio' => function($mergeField, $helpText) {
+	'radio' => function($mergeField, $helpText, $errorMessage='') {
 		$renderRadios = function($tag, $required, $choices) {
 			return join('', array_map(function($choice) use ($tag, $required) {
 				return sprintf('
@@ -221,45 +169,101 @@ MergeFieldRenderers::$renderers = array(
 			}, $choices));
 		};
 		return sprintf('
-			<div>
+			<div
+				data-ns-mailchimp-widget-field="%s">
 				<span class="name">%s</span>
 				%s
 				%s
 				%s
 			</div>',
+			$mergeField->tag,
 			$mergeField->name,
-			MergeFieldRenderers::render_error_message($errorMessage),
+			MergeFieldRenderers::render_error_message($errorMessage, $mergeField->tag),
 			MergeFieldRenderers::render_help_text($helpText),
 			$renderRadios(
 				$mergeField->tag,
 				$mergeField->required,
 				$mergeField->options->choices));
 	},
-	'text' => function($mergeField, $helpText) {
+	'birthday' => function($mergeField, $helpText, $errorMessage='') {
 		return MergeFieldRenderers::render_input_field(
 			$mergeField->name,
 			"mergeFields[{$mergeField->tag}]",
 			$mergeField->required,
-			'text',
-			MergeFieldRenderers::render_error_message($errorMessage),
-			MergeFieldRenderers::render_help_text($helpText));
+			'date',
+			$errorMessage,
+			$helpText);
 	},
-	'url' => function($mergeField, $helpText) {
+	'date' => function($mergeField, $helpText, $errorMessage='') {
+		return MergeFieldRenderers::render_input_field(
+			$mergeField->name,
+			"mergeFields[{$mergeField->tag}]",
+			$mergeField->required,
+			'date',
+			$errorMessage,
+			$helpText);
+	},
+	'email' => function($mergeField, $helpText, $errorMessage='') {
+		return MergeFieldRenderers::render_input_field(
+			$mergeField->name,
+			"mergeFields[{$mergeField->tag}]",
+			$mergeField->required,
+			'email',
+			$errorMessage,
+			$helpText);
+	},
+	'imageurl' => function($mergeField, $helpText, $errorMessage='') {
 		return MergeFieldRenderers::render_input_field(
 			$mergeField->name,
 			"mergeFields[{$mergeField->tag}]",
 			$mergeField->required,
 			'url',
-			MergeFieldRenderers::render_error_message($errorMessage),
-			MergeFieldRenderers::render_help_text($helpText));
+			$errorMessage,
+			$helpText);
 	},
-	'zip' => function($mergeField, $helpText) {
+	'number' => function($mergeField, $helpText, $errorMessage='') {
+		return MergeFieldRenderers::render_input_field(
+			$mergeField->name,
+			"mergeFields[{$mergeField->tag}]",
+			$mergeField->required,
+			'number',
+			$errorMessage,
+			$helpText);
+	},
+	'phone' => function($mergeField, $helpText, $errorMessage='') {
+		return MergeFieldRenderers::render_input_field(
+			$mergeField->name,
+			"mergeFields[{$mergeField->tag}]",
+			$mergeField->required,
+			'tel',
+			$errorMessage,
+			$helpText);
+	},
+	'text' => function($mergeField, $helpText, $errorMessage='') {
 		return MergeFieldRenderers::render_input_field(
 			$mergeField->name,
 			"mergeFields[{$mergeField->tag}]",
 			$mergeField->required,
 			'text',
-			MergeFieldRenderers::render_error_message($errorMessage),
-			MergeFieldRenderers::render_help_text($helpText));
+			$errorMessage,
+			$helpText);
+	},
+	'url' => function($mergeField, $helpText, $errorMessage='') {
+		return MergeFieldRenderers::render_input_field(
+			$mergeField->name,
+			"mergeFields[{$mergeField->tag}]",
+			$mergeField->required,
+			'url',
+			$errorMessage,
+			$helpText);
+	},
+	'zip' => function($mergeField, $helpText, $errorMessage='') {
+		return MergeFieldRenderers::render_input_field(
+			$mergeField->name,
+			"mergeFields[{$mergeField->tag}]",
+			$mergeField->required,
+			'text',
+			$errorMessage,
+			$helpText);
 	},
 );

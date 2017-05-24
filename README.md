@@ -30,8 +30,6 @@ If you find this plugin useful, please rate it and/or make a donation.
 5. Select a mailing list and you're ready to go!
 6. Please rate the plugin.
 
-##Frequently Asked Questions##
-
 == Screenshots ==
 1. Just add your MailChimp API key.
 2. Select your Widget Options.

@@ -70,6 +70,11 @@ try {
 		add_action('widgets_init', function() {
 			register_widget(new MailChimpWidget\Widget);
 		});
+		if (empty($options['styles'])) {
+			wp_enqueue_style(
+				'ns_mailchimpwidget',
+				plugins_url('./stylesheets/style.css', __FILE__));
+		}
 	} else {
 		add_action('admin_notices', function() {
 			printf('
@@ -78,7 +83,7 @@ try {
 			</div>',
 			sprintf(
 				__("You'll need to set up the MailChimp Widget plugin settings before using it.
-				You can do that <a href='%s'>here</a>.", NS_MAILCHIMP),
+				You can do that <a href='%s'>here</a>.", 'ns-mailchimp-widget'),
 				admin_url('/options-general.php?page=mailchimp-widget-settings')));
 		});
 	}

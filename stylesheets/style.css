@@ -1,6 +1,13 @@
-.widget_mailchimp-widget {
-
+.widget_mailchimp-widget
+.error {
+    display: block;
 }
-.widget_mailchimp-widget form {
+.widget_mailchimp-widget
+.invalid
+.error {
+    color: rgb(255,0,0);
+}
 
+.widget_mailchimp-widget form[disabled] {
+    opacity: 0.75;
 }

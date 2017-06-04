@@ -13,15 +13,20 @@ class Settings {
                 'ns-mailchimp-widget',
                 null,
                 function() {
-                    printf
-                        (__("
+                    printf(
+                        esc_html__("
                             Enter a valid MailChimp API key here to get started. Once you've done that,
-                            you can use the MailChimp Widget from the <a href='%s'>Widgets admin page</a>.
+                            you can use the MailChimp Widget from the %sWidgets admin page%s.
                             You will need to have at least one MailChimp list set up before the using the
                             widget.",
                             'ns-mailchimp-widget'
                         ),
-                        get_admin_url(null, 'widgets.php'));
+                        sprintf(
+                            '<a href="%s">',
+                            get_admin_url(null, 'widgets.php')
+                        ),
+                        '</a>'
+                    );
                 },
                 'mailchimp-widget-settings');
 
@@ -46,8 +51,7 @@ class Settings {
                         class="large-text code"
                         cols="50"
                         name="ns-mailchimp-widget[styles]"
-                        rows="10"
-                        value="%s"></textarea>', esc_attr(get_option('ns-mailchimp-widget')['styles']));
+                        rows="10">%s</textarea>', esc_textarea(get_option('ns-mailchimp-widget')['styles']));
                 },
                 'mailchimp-widget-settings',
                 'ns-mailchimp-widget');
@@ -61,12 +65,12 @@ class Settings {
                 'manage_options',
                 'mailchimp-widget-settings',
                 function() {
-                    printf("
-                        <div class=\"wrap\">
+                    printf('
+                        <div class="wrap">
                             <h2>%s</h2>
                         </div>
-                        <form action=\"options.php\" method=\"post\">",
-                        __('MailChimp Widget Settings', 'ns-mailchimp-widget')
+                        <form action="options.php" method="post">',
+                       esc_html__('MailChimp Widget Settings', 'ns-mailchimp-widget')
                     );
                     settings_fields('ns-mailchimp-widget');
                     do_settings_sections('mailchimp-widget-settings');

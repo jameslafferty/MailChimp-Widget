@@ -8,12 +8,12 @@ class Widget extends \WP_Widget {
 	public static function parseErrors($response) {
 		if (is_array($response->errors) && count($response->errors) > 0) {
 			array_walk($response->errors, function($error) use (&$errors) {
-				$errors[$error->field] = $error->message;
+				$errors[$error->field] = esc_html($error->message);
 			});
 		} else {
 			$errors = array();
 			if ($response->title === 'Member Exists') {
-				$errors['email_address'] = __("You've already signed up for this list", 'ns-mailchimp-widget');
+				$errors['email_address'] = esc_html__('You have already signed up for this list', 'ns-mailchimp-widget');
 			}
 		}
 		return $errors;
@@ -26,7 +26,7 @@ class Widget extends \WP_Widget {
 
 		$response = API::post(sprintf('lists/%s/members/', $mailingListId),
 			(object) array(
-			'email_address' => $post['email'],
+			'email_address' => $post['email_address'],
 			'merge_fields' => (object) $mergeFields,
 			'status' => 'pending',
 		));
@@ -143,13 +143,13 @@ class Widget extends \WP_Widget {
 
 	function form($instance) {
 		$settings = (object) wp_parse_args($instance, array(
-			'title' => __('Sign Up For Our Mailing List', 'ns-mailchimp-widget'),
+			'title' => esc_html__('Sign Up For Our Mailing List', 'ns-mailchimp-widget'),
 			'mailingList' => '',
 			'hideOnSuccess' => 'checked',
 			'displayOptionalFields' => '',
 			'emailLast' => '',
-			'successMessage' => __('You have signed up successfully.', 'ns-mailchimp-widget'),
-			'signUpButtonText' => __('Sign Up!', 'ns-mailchimp-widget'),
+			'successMessage' => esc_html__('You have signed up successfully.', 'ns-mailchimp-widget'),
+			'signUpButtonText' => esc_html__('Sign Up!', 'ns-mailchimp-widget'),
 		));
 		printf("
 		<p>
@@ -215,13 +215,13 @@ class Widget extends \WP_Widget {
 				value=\"{$settings->signUpButtonText}\" />
 		</p>
 		",
-		__('Title:', 'ns-mailchimp-widget'),
-		__('Select a Mailing List:', 'ns-mailchimp-widget'),
-		__('Hide widget after successful sign up?', 'ns-mailchimp-widget'),
-		__('Show optional fields?', 'ns-mailchimp-widget'),
-		__('Show email field last?', 'ns-mailchimp-widget'),
-		__('Success Message:', 'ns-mailchimp-widget'),
-		__('Sign Up Button Text:', 'ns-mailchimp-widget'));
+		esc_html__('Title:', 'ns-mailchimp-widget'),
+		esc_html__('Select a Mailing List:', 'ns-mailchimp-widget'),
+		esc_html__('Hide widget after successful sign up?', 'ns-mailchimp-widget'),
+		esc_html__('Show optional fields?', 'ns-mailchimp-widget'),
+		esc_html__('Show email field last?', 'ns-mailchimp-widget'),
+		esc_html__('Success Message:', 'ns-mailchimp-widget'),
+		esc_html__('Sign Up Button Text:', 'ns-mailchimp-widget'));
 	}
 
 	function get_lists($activeList) {
@@ -229,10 +229,11 @@ class Widget extends \WP_Widget {
 			return sprintf(
 				'<option %s value="%s">%s</option>',
 				$activeList === $list->id ? 'selected' : '',
-				$list->id,
-				$list->name);
+				esc_attr($list->id),
+				esc_html($list->name));
 		}, API::get('lists/')->lists);
-		array_unshift($options, '<option value="">Choose one</option>');
+		array_unshift($options, sprintf(
+			'<option value="">%s</option>', esc_html__('Choose one', 'ns-mailchimp-widget')));
 		return join('', $options);
 	}
 
@@ -255,7 +256,7 @@ class Widget extends \WP_Widget {
 		$title = !empty($instance->title) ?
 			join('', array(
 				$args->before_title,
-				$instance->title,
+				esc_html($instance->title),
 				$args->after_title,
 			)) : '';
 		$this->registration = Widget::$registration[$this->number];
@@ -301,7 +302,7 @@ class Widget extends \WP_Widget {
 				$instance->displayOptionalFields,
 				$this->registration ? $this->registration->errors : [],
 				$instance->emailLast),
-			$instance->signUpButtonText,
+			esc_html($instance->signUpButtonText),
 			$args->after_widget);
 	}
 }

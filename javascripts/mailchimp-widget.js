@@ -1,12 +1,18 @@
 (function iife() {
-	if (window.ns_mailchimpwidget === undefined) {
+	if (!window.XMLHttpRequest ||
+		!document.querySelector ||
+		!window.FormData ||
+		!('classList' in Element.prototype) ||
+		!Array.prototype.slice ||
+		!window.ns_mailchimpwidget) {
 		return;
 	}
 
 	function submit(e) {
 		e.preventDefault();
 		var form = e.target;
-		var formControls = form.querySelectorAll('input,button');
+		var formControls = Array.prototype.slice.call(
+			form.querySelectorAll('input,button'));
 		var xhr = new XMLHttpRequest();
 
 		xhr.addEventListener('load', function(e) {
@@ -21,10 +27,10 @@
 			} else {
 				for (var prop in result.errors) {
 					form.querySelector(
-						`[data-ns-mailchimp-widget-error-for*=${prop}]`)
+						'[data-ns-mailchimp-widget-error-for*=' + prop + ']')
 						.textContent = result.errors[prop];
 					form.querySelector(
-						`[data-ns-mailchimp-widget-field*=${prop}]`)
+						'[data-ns-mailchimp-widget-field*=' + prop + ']')
 							.classList.add('invalid');
 				}
 			}
@@ -39,7 +45,7 @@
 		xhr.send(formData);
 	}
 
-	window.ns_mailchimpwidget.ids.forEach(function(id) {
+	function init(id) {
 		var widget = document.getElementById(id);
 		if (widget === null) {
 			return;
@@ -47,5 +53,8 @@
 		widget
 			.querySelector('form')
 			.addEventListener('submit', submit);
-	});
+	}
+
+	Array.prototype.slice.call(window.ns_mailchimpwidget.ids)
+		.forEach(init);
 }());
